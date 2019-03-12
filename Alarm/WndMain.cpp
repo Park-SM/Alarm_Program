@@ -40,7 +40,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
-	int x, y, rCheckingMousePos;
+	int x, y;
 	PAINTSTRUCT ps;
 
 	switch (iMessage) {

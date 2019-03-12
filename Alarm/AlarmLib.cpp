@@ -87,74 +87,81 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, const char type, bool ex
 	ReleaseDC(hWnd, hdc);
 }
 
-void CheckingMousePosAndPrintSelectedButton(HINSTANCE Instance, HWND hWnd, int x, int y) {
-	static bool bPSBa = true, bPNSBa = false;
-	static bool bPSBm = true, bPNSBm = false;
-	static bool bPSBd = true, bPNSBd = false;
-	static bool bPSBc = true, bPNSBc = false;
+int CheckingMousePos(int x, int y) {
+	if (x > ADD_LEFT && x < ADD_RIGHT && y > ADD_TOP && y < ADD_BOTTOM) return 1;
+	else if (x > MODIFY_LEFT && x < MODIFY_RIGHT && y > MODIFY_TOP && y < MODIFY_BOTTOM) return 2;
+	else if (x > DELETE_LEFT && x < DELETE_RIGHT && y > DELETE_TOP && y < DELETE_BOTTOM) return 3;
+	else if (x > COPY_LEFT && x < COPY_RIGHT && y > COPY_TOP && y < COPY_BOTTOM) return 4;
+	else return 0;
+}
 
-	if (x > ADD_LEFT && x < ADD_RIGHT && y > ADD_TOP && y < ADD_BOTTOM) {
-		if (bPSBa) {
+void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type) {
+	static char ButtonType = NULL;
+	static bool bPSB = true, bPNSB = false;
+
+	switch (type) {
+	case 1:
+		if (bPSB) {
 			PrintSelectedButton(Instance, hWnd, 'a', true);
-			bPSBa = false;
-			bPNSBa = true;
+			bPSB = false;
+			bPNSB = true;
+			ButtonType = 'a';
 		}
 		return;
-	} else if (!bPSBa) {
-		if (bPNSBa) PrintSelectedButton(Instance, hWnd, 'a', false);
-		bPSBa = true;
-		bPNSBa = false;
-		return;
-	}
-	if (x > MODIFY_LEFT && x < MODIFY_RIGHT && y > MODIFY_TOP && y < MODIFY_BOTTOM) {
-		if (bPSBm) {
+		
+	case 2:
+		if (bPSB) {
 			PrintSelectedButton(Instance, hWnd, 'm', true);
-			bPSBm = false;
-			bPNSBm = true;
+			bPSB = false;
+			bPNSB = true;
+			ButtonType = 'm';
 		}
 		return;
-	} else if (!bPSBm) {
-		if (bPNSBm) PrintSelectedButton(Instance, hWnd, 'm', false);
-		bPSBm = true;
-		bPNSBm = false;
-		return;
-	}
 
-	if (x > DELETE_LEFT && x < DELETE_RIGHT && y > DELETE_TOP && y < DELETE_BOTTOM) {
-		if (bPSBd) {
+	case 3:
+		if (bPSB) {
 			PrintSelectedButton(Instance, hWnd, 'd', true);
-			bPSBd = false;
-			bPNSBd = true;
+			bPSB = false;
+			bPNSB = true;
+			ButtonType = 'd';
 		}
 		return;
-	}
-	else if (!bPSBd) {
-		if (bPNSBd) PrintSelectedButton(Instance, hWnd, 'd', false);
-		bPSBd = true;
-		bPNSBd = false;
-		return;
-	}
 
-	if (x > COPY_LEFT && x < COPY_RIGHT && y > COPY_TOP && y < COPY_BOTTOM) {
-		if (bPSBc) {
+	case 4:
+		if (bPSB) {
 			PrintSelectedButton(Instance, hWnd, 'c', true);
-			bPSBc = false;
-			bPNSBc = true;
+			bPSB = false;
+			bPNSB = true;
+			ButtonType = 'c';
 		}
 		return;
-	}
-	else if (!bPSBc) {
-		if (bPNSBc) PrintSelectedButton(Instance, hWnd, 'c', false);
-		bPSBc = true;
-		bPNSBc = false;
+
+	case 0:
+		if (bPNSB) {
+			PrintSelectedButton(Instance, hWnd, ButtonType, false);
+			bPSB = true;
+			bPNSB = false;
+		}
 		return;
+	}	
+}
+
+void OnClickListener(HWND hWnd, int type) {
+	switch (type) {
+	case 1:
+		MessageBox(hWnd, "Click Add button!!", "From. Park Alarm", MB_OK);
+		break;
+		
+	case 2:
+		MessageBox(hWnd, "Click Modify button!!", "From. Park Alarm", MB_OK);
+		break;
+
+	case 3:
+		MessageBox(hWnd, "Click Delete button!!", "From. Park Alarm", MB_OK);
+		break;
+
+	case 4:
+		MessageBox(hWnd, "Click Copy button!!", "From. Park Alarm", MB_OK);
+		break;
 	}
-}
-
-void PrintAddBoard(HINSTANCE Instance, HWND hWnd) {
-	HDC hdc;
-}
-
-void PrintAddDisplay() {
-
 }

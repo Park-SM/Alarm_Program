@@ -40,7 +40,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
-	int x, y;
+	int x, y, rCheckingMousePos;
 	PAINTSTRUCT ps;
 
 	switch (iMessage) {
@@ -64,10 +64,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		x = LOWORD(lParam);
 		y = HIWORD(lParam);
-		CheckingMousePosAndPrintSelectedButton(gInstance, hWnd, x, y);
+		UpdateSelectedButton(gInstance, hWnd, CheckingMousePos(x, y));
 		return 0;
 
 	case WM_LBUTTONDOWN:
+		x = LOWORD(lParam);
+		y = HIWORD(lParam);
+		OnClickListener(hWnd, CheckingMousePos(x, y));
+		SendMessage(hWnd, WM_MOUSEMOVE, 0, 0);
 
 		return 0;
 

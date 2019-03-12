@@ -41,6 +41,8 @@ typedef struct tagAlarm {
 ALARM* CreateAlarm(int hour, int minute, int second, int nRefeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo);
 void PrintMainDisplay(HINSTANCE Instac, HWND hWnd, HDC hdc, PAINTSTRUCT *ps);
 void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, const char type, bool exist);
-void CheckingMousePosAndPrintSelectedButton(HINSTANCE Instance, HWND hWnd, int x, int y);
+int CheckingMousePos(int x, int y);
+void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type);
+void OnClickListener(HWND hWnd, int type);
 
 #endif

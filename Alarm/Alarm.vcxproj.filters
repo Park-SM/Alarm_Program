@@ -29,6 +29,9 @@
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonPosition.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Alarm.rc">
@@ -52,6 +55,21 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Copy.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="AddMenu_Hour.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="AddMenu_Minute.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="AddMenu_RepeatWeek.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="AddMenu_Memo.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="AddMenu_Title.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

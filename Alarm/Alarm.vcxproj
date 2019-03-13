@@ -120,6 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlarmLib.h" />
+    <ClInclude Include="ButtonPosition.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Add.bmp" />
+    <Image Include="AddMenu_Hour.bmp" />
+    <Image Include="AddMenu_Memo.bmp" />
+    <Image Include="AddMenu_Minute.bmp" />
+    <Image Include="AddMenu_RepeatWeek.bmp" />
+    <Image Include="AddMenu_Title.bmp" />
     <Image Include="Bar.bmp" />
     <Image Include="Copy.bmp" />
     <Image Include="Delete.bmp" />

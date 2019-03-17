@@ -6,9 +6,9 @@
 
 
 typedef struct tagTime {
-	int Sec;
-	int Min;
 	int Hou;
+	int Min;
+	int Sec;
 }TIME;
 
 typedef struct tagAlarm {
@@ -20,13 +20,13 @@ typedef struct tagAlarm {
 }ALARM;
 
 static bool bPSB = true, bPNSB = false;		// Print Selected Button, Print No Selected Button.
-ALARM *NewNode = NULL;
+static ALARM *NewNode = NULL;
 
-ALARM* CreateAlarm(int hour, int minute, int second, int nRefeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo);
+ALARM* CreateAlarm(int nRefeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo);
 void PrintMainDisplay(HINSTANCE Instac, HWND hWnd, HDC hdc, PAINTSTRUCT *ps);
 void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd, bool exist);
 int CheckingMousePos(int x, int y, int FocusWnd, bool click);
 void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd);
-void AppearAddMenu(HINSTANCE Instacne, HWND hWnd, HDC hdc, int *focus);
+void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, int *FocusWnd);
 
 #endif

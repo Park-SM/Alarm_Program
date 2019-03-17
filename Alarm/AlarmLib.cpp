@@ -2,11 +2,8 @@
 #include "AlarmLib.h"
 #include "resource.h"
 
-ALARM* CreateAlarm(int hour, int minute, int second, int nRepeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo) {
+ALARM* CreateAlarm(int nRepeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo) {
 	ALARM *NewAlarm = (ALARM*)malloc(sizeof(ALARM));
-	NewAlarm->time.Hou = hour;
-	NewAlarm->time.Min = minute;
-	NewAlarm->time.Sec = second;
 
 	for (int i = 0; i < 7; i++) NewAlarm->RepeatDay[i] = nRepeatDay[i];
 	wcsncpy(NewAlarm->szSoundFilePath, lpSoundFilePath, wcslen(lpSoundFilePath) + 1);
@@ -333,11 +330,13 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd
 	}
 }
 
-void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, int *FocusWnd) {
+void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
 	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, OldBit;
 	static bool FirstMotion = true;
+
+	if (NewNode == NULL) NewNode = (ALARM*)malloc(sizeof(ALARM));
 
 	if (FirstMotion) {
 		BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
@@ -386,4 +385,6 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, int *FocusWnd) {
 	DeleteObject(MemoBit);
 	DeleteDC(MemDC);
 
+	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, FocusWnd, true);
+	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, FocusWnd, true);
 }

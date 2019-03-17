@@ -1,14 +1,15 @@
 #include "AlarmLib.h"
 
-HINSTANCE gInstance;
-const char *lpszClassN = "Park Alarm";
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
 
-ALARM *HeadNode = NULL;
+HINSTANCE gInstance;
+const char *lpszClassN = "Park Alarm";
 int FocusWnd = 0;
 bool bAddMenu = false;
 bool bDeleteMenu = false;
+ALARM *HeadNode = NULL;
+TIME tSelectedTime = { 0, };	// For redraw.
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;
@@ -60,7 +61,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
-		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, &FocusWnd);
+		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, tSelectedTime, &FocusWnd);
 		if (bDeleteMenu);
 		EndPaint(hWnd, &ps);
 		return 0;
@@ -117,6 +118,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			PrintSelectedButton(Instance, hWnd, OldHourType, &FocusWnd, false);
 			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
 			OldHourType = type;
+			tSelectedTime.Hou = type;
 			break;
 
 		case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 58: case 59: case 60: case 61:
@@ -127,6 +129,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			PrintSelectedButton(Instance, hWnd, OldMinuteType, &FocusWnd, false);
 			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
 			OldMinuteType = type;
+			tSelectedTime.Min = type;
 			break;
 		}
 	}

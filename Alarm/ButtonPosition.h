@@ -61,21 +61,34 @@
 #define X11 286
 #define X12 310
 
-#define Y0 119	// Y0 ~ Y2 is about HourBox.
+#define Y0 119	// Y0 ~ Y2 are about HourBox.
 #define Y1 137
 #define Y2 154
 
-#define Y3 183	// Y3 ~ Y8 is about MinuteBox.
+#define Y3 183	// Y3 ~ Y8 are about MinuteBox.
 #define Y4 200
 #define Y5 217
 #define Y6 233
 #define Y7 249
 #define Y8 266
 
-#define Y9 294	// Y9 ~ Y9 is about RepeatWeekBox.
+#define Y9 294	// Y9 ~ Y9 are about RepeatWeekBox.
 #define Y10 310
 
-#define R_X0 80		// R_X0 ~ R_X7 is about RepeatWeekBox.
-#define R_X1 95
+#define R_X0 80		// R_X0 ~ R_X13 are about RepeatWeekBox.
+#define R_X1 100
+#define R_X2 106
+#define R_X3 126
+#define R_X4 132
+#define R_X5 152
+#define R_X6 158
+#define R_X7 178
+#define R_X8 184
+#define R_X9 204
+#define R_X10 210
+#define R_X11 230
+#define R_X12 236
+#define R_X13 256
+
 
 #endif

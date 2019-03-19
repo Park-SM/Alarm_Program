@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "AlarmLib.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -10,6 +11,8 @@ bool bAddMenu = false;
 bool bDeleteMenu = false;
 ALARM *HeadNode = NULL;
 TIME tSelectedTime = { 0, };	// For redraw.
+char MemoData[512] = { NULL, };
+int MemoDataLen = 0;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;
@@ -45,6 +48,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	int x, y;
 	PAINTSTRUCT ps;
+	HPEN BorderPen, OldPen;
 
 	switch (iMessage) {
 	case WM_CREATE:
@@ -61,7 +65,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
-		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, tSelectedTime, &FocusWnd);
+		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, tSelectedTime, MemoData, &FocusWnd);
 		if (bDeleteMenu);
 		EndPaint(hWnd, &ps);
 		return 0;
@@ -77,7 +81,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		y = HIWORD(lParam);
 		OnClickListener(gInstance, hWnd, CheckingMousePos(x, y, FocusWnd, true));
 		SendMessage(hWnd, WM_MOUSEMOVE, 0, 0);
+		return 0;
 
+	case WM_CHAR:
+		if (wParam == VK_BACK) {
+			if (MemoDataLen - 1 >= 0) MemoData[--MemoDataLen] = 0;
+		} else {
+			MemoData[MemoDataLen] = wParam;
+			MemoData[++MemoDataLen] = 0;
+		}
+		InvalidateRect(hWnd, NULL, true);	// NULL부분을 최소화하기 ★★★★★★★★★★★★★★★
 		return 0;
 
 	case WM_DESTROY:
@@ -88,8 +101,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 }
 
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
+	HDC hdc;
 	static int OldHourType = 0;
 	static int OldMinuteType = 0;
+	static int OldRepeatWeekType = 0;	// 배열로 바꿔야함..★★★★★★★★★★★★★
 
 	if (FocusWnd == 0) {
 		switch (type) {
@@ -130,6 +145,13 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
 			OldMinuteType = type;
 			tSelectedTime.Min = type;
+			break;
+
+		case 120: case 121: case 122: case 123: case 124: case 125: case 126:
+			PrintSelectedButton(Instance, hWnd, OldRepeatWeekType, &FocusWnd, false);
+			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
+			OldRepeatWeekType = type;
+			tSelectedTime.RepeatWeek = type;
 			break;
 		}
 	}

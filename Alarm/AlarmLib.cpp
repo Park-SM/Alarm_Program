@@ -180,6 +180,13 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd,
 			case 109: Rectangle(hdc, X11, Y7, X12, Y8); break;
 
 			case 120: Rectangle(hdc, R_X0, Y9, R_X1, Y10); break;
+			case 121: Rectangle(hdc, R_X2, Y9, R_X3, Y10); break;
+			case 122: Rectangle(hdc, R_X4, Y9, R_X5, Y10); break;
+			case 123: Rectangle(hdc, R_X6, Y9, R_X7, Y10); break;
+			case 124: Rectangle(hdc, R_X8, Y9, R_X9, Y10); break;
+			case 125: Rectangle(hdc, R_X10, Y9, R_X11, Y10); break;
+			case 126: Rectangle(hdc, R_X12, Y9, R_X13, Y10); break;
+
 			}
 		}
 
@@ -298,6 +305,12 @@ int CheckingMousePos(int x, int y, int FocusWnd, bool click) {
 		}
 		if (x > RB_LEFT && x < RB_RIGHT && y > RB_TOP && y < RB_BOTTOM) {
 			if (click && x > R_X0 && x < R_X1 && y > Y9 && y < Y10) return 120;
+			if (click && x > R_X2 && x < R_X3 && y > Y9 && y < Y10) return 121;
+			if (click && x > R_X4 && x < R_X5 && y > Y9 && y < Y10) return 122;
+			if (click && x > R_X6 && x < R_X7 && y > Y9 && y < Y10) return 123;
+			if (click && x > R_X8 && x < R_X9 && y > Y9 && y < Y10) return 124;
+			if (click && x > R_X10 && x < R_X11 && y > Y9 && y < Y10) return 125;
+			if (click && x > R_X12 && x < R_X13 && y > Y9 && y < Y10) return 126;
 			
 			return 3; }
 		if (x > MEB_LEFT && x < MEB_RIGHT && y > MEB_TOP && y < MEB_BOTTOM) return 4;
@@ -330,7 +343,7 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd
 	}
 }
 
-void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, int *FocusWnd) {
+void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, char *MemoData, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
 	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, OldBit;
@@ -338,22 +351,19 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, i
 
 	if (NewNode == NULL) NewNode = (ALARM*)malloc(sizeof(ALARM));
 
+	BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
+	OldPen = (HPEN)SelectObject(hdc, BorderPen);
 	if (FirstMotion) {
-		BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
-		OldPen = (HPEN)SelectObject(hdc, BorderPen);
-
 		for (int StayX = 1; StayX <= 35; StayX++) {
 			for (int Frame = StayX; Frame > 0; Frame--)
 				Rectangle(hdc, 0, 50, StayX * 10, 450);
 			Sleep(15);
 		}
-
-		SelectObject(hdc, OldPen);
-		DeleteObject(BorderPen);
-
 		*FocusWnd = 1;
 		FirstMotion = false;
 	} else Rectangle(hdc, 0, 50, 350, 450);
+	SelectObject(hdc, OldPen);
+	DeleteObject(BorderPen);
 
 	MemDC = CreateCompatibleDC(hdc);
 	TitleBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP11));
@@ -387,4 +397,6 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, i
 
 	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, FocusWnd, true);
 	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, FocusWnd, true);
+	SetTextColor(hdc, RGB(61, 183, 204));
+	TextOut(hdc, MEB_LEFT + 3, MEB_TOP, MemoData, strlen(MemoData));
 }

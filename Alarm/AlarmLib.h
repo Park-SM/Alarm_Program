@@ -9,6 +9,7 @@ typedef struct tagTime {
 	int Hou;
 	int Min;
 	int Sec;
+	int RepeatWeek;
 }TIME;
 
 typedef struct tagAlarm {
@@ -27,6 +28,6 @@ void PrintMainDisplay(HINSTANCE Instac, HWND hWnd, HDC hdc, PAINTSTRUCT *ps);
 void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd, bool exist);
 int CheckingMousePos(int x, int y, int FocusWnd, bool click);
 void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd);
-void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, int *FocusWnd);
+void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, char *MemoData, int *FocusWnd);
 
 #endif

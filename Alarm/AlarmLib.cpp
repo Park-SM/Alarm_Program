@@ -2,6 +2,7 @@
 #include "AlarmLib.h"
 #include "resource.h"
 
+/*
 ALARM* CreateAlarm(int nRepeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo) {
 	ALARM *NewAlarm = (ALARM*)malloc(sizeof(ALARM));
 
@@ -12,6 +13,7 @@ ALARM* CreateAlarm(int nRepeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo)
 
 	return NewAlarm;
 }
+*/
 
 void PrintMainDisplay(HINSTANCE Instance, HWND hWnd, HDC hdc, PAINTSTRUCT *ps) {
 	HDC MemDC;
@@ -343,9 +345,10 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd
 	}
 }
 
-void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, char *MemoData, int *FocusWnd) {
+void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
+	HFONT Font, OldFont;
 	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, OldBit;
 	static bool FirstMotion = true;
 
@@ -397,6 +400,11 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, c
 
 	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, FocusWnd, true);
 	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, FocusWnd, true);
+
+	Font = CreateFont(15, 0, 0, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	OldFont = (HFONT)SelectObject(hdc, Font);
 	SetTextColor(hdc, RGB(61, 183, 204));
-	TextOut(hdc, MEB_LEFT + 3, MEB_TOP, MemoData, strlen(MemoData));
+	TextOut(hdc, MEB_LEFT + 3, MEB_TOP, MemoData, wcslen(MemoData));
+	SelectObject(hdc, OldFont);
+	DeleteObject(Font);
 }

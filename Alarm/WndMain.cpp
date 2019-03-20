@@ -1,17 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "AlarmLib.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
 
 HINSTANCE gInstance;
-const char *lpszClassN = "Park Alarm";
+LPCWSTR lpszClassN = L"Park Alarm";
 int FocusWnd = 0;
 bool bAddMenu = false;
 bool bDeleteMenu = false;
 ALARM *HeadNode = NULL;
 TIME tSelectedTime = { 0, };	// For redraw.
-char MemoData[512] = { NULL, };
+LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 int MemoDataLen = 0;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
@@ -32,7 +33,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	hWnd = CreateWindow(lpszClassN, "", WS_THICKFRAME,
+	hWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
@@ -51,9 +52,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	HPEN BorderPen, OldPen;
 
 	switch (iMessage) {
-	case WM_CREATE:
-		MoveWindow(hWnd, 0, 0, 300, 150, TRUE);
-		return 0;
 
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMaxTrackSize.x = 500;
@@ -86,7 +84,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		if (wParam == VK_BACK) {
 			if (MemoDataLen - 1 >= 0) MemoData[--MemoDataLen] = 0;
-		} else {
+		} else if (wParam == VK_RETURN) {
+			return 0;
+		} else if (MemoDataLen < MEMO_MAXBUF) {
 			MemoData[MemoDataLen] = wParam;
 			MemoData[++MemoDataLen] = 0;
 		}
@@ -114,15 +114,15 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 2:
-			MessageBox(hWnd, "Click Modify button!!", "From. Park Alarm", MB_OK);
+			MessageBox(hWnd, L"Click Modify button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		case 3:
-			MessageBox(hWnd, "Click Delete button!!", "From. Park Alarm", MB_OK);
+			MessageBox(hWnd, L"Click Delete button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		case 4:
-			MessageBox(hWnd, "Click Copy button!!", "From. Park Alarm", MB_OK);
+			MessageBox(hWnd, L"Click Copy button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		}

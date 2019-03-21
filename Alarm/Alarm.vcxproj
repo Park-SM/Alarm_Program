@@ -128,6 +128,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Add.bmp" />
+    <Image Include="AddMenu_Cancel.bmp" />
+    <Image Include="AddMenu_Create.bmp" />
     <Image Include="AddMenu_Hour.bmp" />
     <Image Include="AddMenu_Memo.bmp" />
     <Image Include="AddMenu_Minute.bmp" />

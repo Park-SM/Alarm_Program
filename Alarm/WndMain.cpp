@@ -9,9 +9,10 @@ HINSTANCE gInstance;
 LPCWSTR lpszClassN = L"Park Alarm";
 int FocusWnd = 0;
 bool bAddMenu = false;
+bool AddMenuFirstMotion = true;
 bool bDeleteMenu = false;
 ALARM *HeadNode = NULL;
-TIME tSelectedTime = { 0, };	// For redraw.
+TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 int MemoDataLen = 0;
 
@@ -63,7 +64,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
-		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, tSelectedTime, MemoData, &FocusWnd);
+		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &AddMenuFirstMotion, &FocusWnd);
 		if (bDeleteMenu);
 		EndPaint(hWnd, &ps);
 		return 0;
@@ -104,7 +105,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 	HDC hdc;
 	static int OldHourType = 0;
 	static int OldMinuteType = 0;
-	static int OldRepeatWeekType = 0;	// 배열로 바꿔야함..★★★★★★★★★★★★★
+	static int OldRepeatWeekType[7] = { 0, };
 
 	if (FocusWnd == 0) {
 		switch (type) {
@@ -133,7 +134,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			PrintSelectedButton(Instance, hWnd, OldHourType, &FocusWnd, false);
 			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
 			OldHourType = type;
-			tSelectedTime.Hou = type;
+			tSelectedTime->Hou = type;
 			break;
 
 		case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 58: case 59: case 60: case 61:
@@ -144,14 +145,24 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			PrintSelectedButton(Instance, hWnd, OldMinuteType, &FocusWnd, false);
 			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
 			OldMinuteType = type;
-			tSelectedTime.Min = type;
+			tSelectedTime->Min = type;
 			break;
 
 		case 120: case 121: case 122: case 123: case 124: case 125: case 126:
-			PrintSelectedButton(Instance, hWnd, OldRepeatWeekType, &FocusWnd, false);
-			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
-			OldRepeatWeekType = type;
-			tSelectedTime.RepeatWeek = type;
+			if (tSelectedTime->RepeatWeek[type - 120] == 0) tSelectedTime->RepeatWeek[type - 120] = 1;
+			else tSelectedTime->RepeatWeek[type - 120] = 0;
+			InvalidateRect(hWnd, NULL, true);
+			break;
+
+		case 150: case 151:
+			CreateAlarm(tSelectedTime, MemoData);
+			FocusWnd = 0;
+			bAddMenu = false;
+			AddMenuFirstMotion = true;
+			memset(tSelectedTime, 0, sizeof(TIME));
+			memset(MemoData, 0, MEMO_MAXBUF * sizeof(wchar_t));
+			MemoDataLen = 0;
+			InvalidateRect(hWnd, NULL, true);
 			break;
 		}
 	}

@@ -47,6 +47,16 @@
 #define MEB_RIGHT 317
 #define MEB_BOTTOM 353
 
+#define CT_LEFT 165
+#define CT_TOP 412
+#define CT_RIGHT 240
+#define CT_BOTTOM 442
+
+#define CL_LEFT 250
+#define CL_TOP 412
+#define CL_RIGHT 328
+#define CL_BOTTOM 442
+
 #define X0 27
 #define X1 50
 #define X2 74

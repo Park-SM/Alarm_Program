@@ -2,18 +2,15 @@
 #include "AlarmLib.h"
 #include "resource.h"
 
-/*
-ALARM* CreateAlarm(int nRepeatDay[7], WCHAR *lpSoundFilePath, const char *nMemo) {
-	ALARM *NewAlarm = (ALARM*)malloc(sizeof(ALARM));
 
-	for (int i = 0; i < 7; i++) NewAlarm->RepeatDay[i] = nRepeatDay[i];
-	wcsncpy(NewAlarm->szSoundFilePath, lpSoundFilePath, wcslen(lpSoundFilePath) + 1);
-	strncpy(NewAlarm->Memo, nMemo, strlen(nMemo) + 1);
-	NewAlarm->NextAlarm = NULL;
+void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData) {
 
-	return NewAlarm;
+	for (int i = 0; i < 7; i++) NewNode->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
+	NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
+	wcsncpy(NewNode->MemoData, nMemoData, wcslen(nMemoData) + 1);
+	//wcsncpy(NewNode->szSoundFilePath, lpSoundFilePath, wcslen(lpSoundFilePath) + 1);
+	NewNode->NextAlarm = NULL;
 }
-*/
 
 void PrintMainDisplay(HINSTANCE Instance, HWND hWnd, HDC hdc, PAINTSTRUCT *ps) {
 	HDC MemDC;
@@ -89,6 +86,8 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd,
 			case 2: Rectangle(hdc, MB_LEFT, MB_TOP, MB_RIGHT, MB_BOTTOM); break;
 			case 3: Rectangle(hdc, RB_LEFT, RB_TOP, RB_RIGHT, RB_BOTTOM); break;
 			case 4: Rectangle(hdc, MEB_LEFT, MEB_TOP, MEB_RIGHT, MEB_BOTTOM); break;
+			case 5: Rectangle(hdc, CT_LEFT, CT_TOP, CT_RIGHT, CT_BOTTOM); break;
+			case 6: Rectangle(hdc, CL_LEFT, CL_TOP, CL_RIGHT, CL_BOTTOM); break;
 
 			case 20: Rectangle(hdc, X0, Y0, X1, Y1); break;
 			case 21: Rectangle(hdc, X1, Y0, X2, Y1); break;
@@ -316,6 +315,14 @@ int CheckingMousePos(int x, int y, int FocusWnd, bool click) {
 			
 			return 3; }
 		if (x > MEB_LEFT && x < MEB_RIGHT && y > MEB_TOP && y < MEB_BOTTOM) return 4;
+		if (x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) {
+			if (click && x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) return 150;
+
+			return 5; }
+		if (x > CL_LEFT && x < CL_RIGHT && y > CL_TOP && y < CL_BOTTOM) {
+			if (click && x > CL_LEFT && x < CL_RIGHT && y > CL_TOP && y < CL_BOTTOM) return 151;
+			
+			return 6; }
 
 		return 0;
 	}
@@ -340,30 +347,31 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd
 		case 2: if (bPSB) { PrintSelectedButton(Instance, hWnd, 2, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 2; } return;
 		case 3: if (bPSB) { PrintSelectedButton(Instance, hWnd, 3, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 3; } return;
 		case 4: if (bPSB) { PrintSelectedButton(Instance, hWnd, 4, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 4; } return;
+		case 5: if (bPSB) { PrintSelectedButton(Instance, hWnd, 5, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 5; } return;
+		case 6: if (bPSB) { PrintSelectedButton(Instance, hWnd, 6, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 6; } return;
 		case 0: if (bPNSB) { PrintSelectedButton(Instance, hWnd, onButtonType, FocusWnd, false); bPSB = true; bPNSB = false; } return;
 		}
 	}
 }
 
-void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, int *FocusWnd) {
+void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, bool *AddMenuFirstMotion, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
 	HFONT Font, OldFont;
-	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, OldBit;
-	static bool FirstMotion = true;
+	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, OldBit;
 
 	if (NewNode == NULL) NewNode = (ALARM*)malloc(sizeof(ALARM));
 
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);
-	if (FirstMotion) {
+	if (*AddMenuFirstMotion) {
 		for (int StayX = 1; StayX <= 35; StayX++) {
 			for (int Frame = StayX; Frame > 0; Frame--)
 				Rectangle(hdc, 0, 50, StayX * 10, 450);
 			Sleep(15);
 		}
 		*FocusWnd = 1;
-		FirstMotion = false;
+		*AddMenuFirstMotion = false;
 	} else Rectangle(hdc, 0, 50, 350, 450);
 	SelectObject(hdc, OldPen);
 	DeleteObject(BorderPen);
@@ -374,6 +382,8 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	MinuteBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP8));
 	RepeatWeekBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP9));
 	MemoBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP10));
+	CreateBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP12));
+	CancelBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP13));
 
 	OldBit = (HBITMAP)SelectObject(MemDC, TitleBit);
 	BitBlt(hdc, 10, 55, 350, 55, MemDC, 0, 0, SRCCOPY);
@@ -390,18 +400,29 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	SelectObject(MemDC, MemoBit);
 	BitBlt(hdc, 10, 325, 350, 45, MemDC, 0, 0, SRCCOPY);
 
+	SelectObject(MemDC, CreateBit);
+	BitBlt(hdc, 165, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, CancelBit);
+	BitBlt(hdc, 250, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
+
 	SelectObject(MemDC, OldBit);
 	DeleteObject(TitleBit);
 	DeleteObject(HourBit);
 	DeleteObject(MinuteBit);
 	DeleteObject(RepeatWeekBit);
 	DeleteObject(MemoBit);
+	DeleteObject(CreateBit);
+	DeleteObject(CancelBit);
 	DeleteDC(MemDC);
 
 	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, FocusWnd, true);
 	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, FocusWnd, true);
+	for (int i = 0; i < 7; i++) {
+		if (tSelectedTime.RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 120, FocusWnd, true);
+	}
 
-	Font = CreateFont(15, 0, 0, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	Font = CreateFont(15, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
 	OldFont = (HFONT)SelectObject(hdc, Font);
 	SetTextColor(hdc, RGB(61, 183, 204));
 	TextOut(hdc, MEB_LEFT + 3, MEB_TOP, MemoData, wcslen(MemoData));

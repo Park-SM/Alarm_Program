@@ -3,13 +3,41 @@
 #include "resource.h"
 
 
-void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData) {
+ALARM* CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData) {
 
 	for (int i = 0; i < 7; i++) NewNode->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
 	NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 	wcsncpy(NewNode->MemoData, nMemoData, wcslen(nMemoData) + 1);
 	//wcsncpy(NewNode->szSoundFilePath, lpSoundFilePath, wcslen(lpSoundFilePath) + 1);
 	NewNode->NextAlarm = NULL;
+
+	return NewNode;
+}
+
+void AppendNode(ALARM **HeadNode, ALARM *NewNode) {
+	if (*HeadNode == NULL) {
+		*HeadNode = NewNode;
+	} else {
+		ALARM *TailNode = *HeadNode;
+		while (TailNode->NextAlarm != NULL) TailNode = TailNode->NextAlarm;
+		TailNode->NextAlarm = NewNode;
+	}
+}
+
+void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
+	if (HeadNode != NULL) {
+		//int strlen = 0;
+		//LPWSTR Buf[512] = { 0, };
+
+		int PrintAlarm_y = 130;
+		while (HeadNode != NULL) {
+			//wsprintf(*Buf, L"%d", HeadNode->time.Hou);
+			//TextOut(hdc, 100, PrintAlarm_y, *Buf, wcslen(*Buf));
+			TextOut(hdc, 100, PrintAlarm_y, HeadNode->MemoData, wcslen(HeadNode->MemoData));
+			PrintAlarm_y += 20;
+			HeadNode = HeadNode->NextAlarm;
+		}
+	}
 }
 
 void PrintMainDisplay(HINSTANCE Instance, HWND hWnd, HDC hdc, PAINTSTRUCT *ps) {
@@ -25,22 +53,22 @@ void PrintMainDisplay(HINSTANCE Instance, HWND hWnd, HDC hdc, PAINTSTRUCT *ps) {
 	CopyBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP6));
 
 	OldBit = (HBITMAP)SelectObject(MemDC, TitleBit);
-	BitBlt(hdc, 68, 0, 500, 100, MemDC, 0, 0, SRCCOPY);		// Print Tilte string
+	BitBlt(hdc, 68, 0, 356, 79, MemDC, 0, 0, SRCCOPY);		// Print Tilte string
 
 	SelectObject(MemDC, BarBit);
-	BitBlt(hdc, 40, 73, 500, 100, MemDC, 0, 0, SRCCOPY);	// Print Bar
+	BitBlt(hdc, 40, 73, 402, 17, MemDC, 0, 0, SRCCOPY);		// Print Bar
 
 	SelectObject(MemDC, AddBit);
-	BitBlt(hdc, 115, 90, 45, 23, MemDC, 0, 0, SRCCOPY);		// Print Add Button
+	BitBlt(hdc, 115, 90, 51, 29, MemDC, 0, 0, SRCCOPY);		// Print Add Button
 
 	SelectObject(MemDC, ModifyBit);
-	BitBlt(hdc, 168, 90, 70, 23, MemDC, 0, 0, SRCCOPY);		// Print Modify Button
+	BitBlt(hdc, 168, 90, 75, 29, MemDC, 0, 0, SRCCOPY);		// Print Modify Button
 
 	SelectObject(MemDC, DeleteBit);
-	BitBlt(hdc, 245, 90, 70, 23, MemDC, 0, 0, SRCCOPY);		// Print Delete Button
+	BitBlt(hdc, 245, 90, 71, 29, MemDC, 0, 0, SRCCOPY);		// Print Delete Button
 
 	SelectObject(MemDC, CopyBit);
-	BitBlt(hdc, 318, 90, 70, 23, MemDC, 0, 0, SRCCOPY);		// Print Copy Button
+	BitBlt(hdc, 318, 90, 59, 29, MemDC, 0, 0, SRCCOPY);		// Print Copy Button
 
 	SelectObject(MemDC, OldBit);
 	DeleteObject(TitleBit);
@@ -360,7 +388,7 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	HFONT Font, OldFont;
 	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, OldBit;
 
-	if (NewNode == NULL) NewNode = (ALARM*)malloc(sizeof(ALARM));
+	NewNode = (ALARM*)malloc(sizeof(ALARM));
 
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);
@@ -422,7 +450,7 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 		if (tSelectedTime.RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 120, FocusWnd, true);
 	}
 
-	Font = CreateFont(15, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	Font = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
 	OldFont = (HFONT)SelectObject(hdc, Font);
 	SetTextColor(hdc, RGB(61, 183, 204));
 	TextOut(hdc, MEB_LEFT + 3, MEB_TOP, MemoData, wcslen(MemoData));

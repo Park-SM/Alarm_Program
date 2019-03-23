@@ -24,7 +24,9 @@ typedef struct tagAlarm {
 static bool bPSB = true, bPNSB = false;		// Print Selected Button, Print No Selected Button.
 static ALARM *NewNode = NULL;
 
-void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData);
+ALARM* CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData);
+void AppendNode(ALARM **HeadNode, ALARM *NewNode);
+void PrintAlarmList(ALARM *HeadNode, HDC hdc);
 void PrintMainDisplay(HINSTANCE Instac, HWND hWnd, HDC hdc, PAINTSTRUCT *ps);
 void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd, bool exist);
 int CheckingMousePos(int x, int y, int FocusWnd, bool click);

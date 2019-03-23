@@ -47,10 +47,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
-	HDC hdc;
 	int x, y;
-	PAINTSTRUCT ps;
-	HPEN BorderPen, OldPen;
 
 	switch (iMessage) {
 
@@ -62,8 +59,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_PAINT:
+		HDC hdc;
+		PAINTSTRUCT ps;
 		hdc = BeginPaint(hWnd, &ps);
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
+		PrintAlarmList(HeadNode, hdc);
 		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &AddMenuFirstMotion, &FocusWnd);
 		if (bDeleteMenu);
 		EndPaint(hWnd, &ps);
@@ -91,7 +91,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			MemoData[MemoDataLen] = wParam;
 			MemoData[++MemoDataLen] = 0;
 		}
-		InvalidateRect(hWnd, NULL, true);	// NULL부분을 최소화하기 ★★★★★★★★★★★★★★★
+		InvalidateRect(hWnd, NULL, true);
 		return 0;
 
 	case WM_DESTROY:
@@ -155,13 +155,16 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 150: case 151:
-			CreateAlarm(tSelectedTime, MemoData);
+			if (type == 150) AppendNode(&HeadNode, CreateAlarm(tSelectedTime, MemoData));
+			else if (type == 151) free(NewNode);
+
 			FocusWnd = 0;
 			bAddMenu = false;
 			AddMenuFirstMotion = true;
 			memset(tSelectedTime, 0, sizeof(TIME));
 			memset(MemoData, 0, MEMO_MAXBUF * sizeof(wchar_t));
 			MemoDataLen = 0;
+
 			InvalidateRect(hWnd, NULL, true);
 			break;
 		}

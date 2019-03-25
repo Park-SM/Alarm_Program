@@ -91,7 +91,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			MemoData[MemoDataLen] = wParam;
 			MemoData[++MemoDataLen] = 0;
 		}
-		InvalidateRect(hWnd, NULL, true);
+		InvalidateRect(hWnd, NULL, true);		// NULL부분을 최소화하기 ★★★★★★★★★★★★★★★
 		return 0;
 
 	case WM_DESTROY:
@@ -155,8 +155,12 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 150: case 151:
-			if (type == 150) AppendNode(&HeadNode, CreateAlarm(tSelectedTime, MemoData));
-			else if (type == 151) free(NewNode);
+			if (type == 150) {
+				AppendNode(&HeadNode, CreateAlarm(tSelectedTime, MemoData));
+				NewNode = NULL;		// 에러: NewNode의 위치를 WndMain.cpp로 바꿔야 할 듯함.
+			} else if (type == 151) {
+				free(NewNode); NewNode = NULL;
+			}
 
 			FocusWnd = 0;
 			bAddMenu = false;

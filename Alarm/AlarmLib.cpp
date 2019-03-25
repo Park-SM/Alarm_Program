@@ -26,17 +26,27 @@ void AppendNode(ALARM **HeadNode, ALARM *NewNode) {
 
 void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
 	if (HeadNode != NULL) {
-		//int strlen = 0;
-		//LPWSTR Buf[512] = { 0, };
+		int PrintAlarm_y = 150;
+		int PrintAlarmBorder_y = 130;
+		LPWSTR Buf_Hour = (LPWSTR)calloc(1, sizeof(wchar_t));
+		LPWSTR Buf_Minu = (LPWSTR)calloc(1, sizeof(wchar_t));
+		HPEN BorderPen, OldPen;
 
-		int PrintAlarm_y = 130;
+		BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
+		OldPen = (HPEN)SelectObject(hdc, BorderPen);
 		while (HeadNode != NULL) {
-			//wsprintf(*Buf, L"%d", HeadNode->time.Hou);
-			//TextOut(hdc, 100, PrintAlarm_y, *Buf, wcslen(*Buf));
-			TextOut(hdc, 100, PrintAlarm_y, HeadNode->MemoData, wcslen(HeadNode->MemoData));
-			PrintAlarm_y += 20;
+			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
+			_itow(HeadNode->time.Hou, Buf_Hour, 10);
+			_itow(HeadNode->time.Min, Buf_Minu, 10);
+			TextOut(hdc, 100, PrintAlarm_y, Buf_Hour, wcslen(Buf_Hour));
+			TextOut(hdc, 120, PrintAlarm_y, Buf_Minu, wcslen(Buf_Minu));
+			TextOut(hdc, 150, PrintAlarm_y, HeadNode->MemoData, wcslen(HeadNode->MemoData));
+			PrintAlarm_y += 50;
+			PrintAlarmBorder_y += 50;
 			HeadNode = HeadNode->NextAlarm;
 		}
+		SelectObject(hdc, OldPen);
+		DeleteObject(BorderPen);
 	}
 }
 
@@ -388,7 +398,7 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	HFONT Font, OldFont;
 	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, OldBit;
 
-	NewNode = (ALARM*)malloc(sizeof(ALARM));
+	if (NewNode == NULL) NewNode = (ALARM*)malloc(sizeof(ALARM));
 
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(61, 183, 204));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);

@@ -10,8 +10,9 @@ LPCWSTR lpszClassN = L"Park Alarm";
 int FocusWnd = 0;
 bool bAddMenu = false;
 bool AddMenuFirstMotion = true;
-bool bDeleteMenu = false;
+bool bModifyMenu = false;
 ALARM *HeadNode = NULL;
+ALARM *NewNode = NULL;
 TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 int MemoDataLen = 0;
@@ -64,21 +65,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		hdc = BeginPaint(hWnd, &ps);
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
 		PrintAlarmList(HeadNode, hdc);
-		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &AddMenuFirstMotion, &FocusWnd);
-		if (bDeleteMenu);
+		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &NewNode, &AddMenuFirstMotion, &FocusWnd);
+		if (bModifyMenu);
 		EndPaint(hWnd, &ps);
 		return 0;
 
 	case WM_MOUSEMOVE:
 		x = LOWORD(lParam);
 		y = HIWORD(lParam);
-		UpdateSelectedButton(gInstance, hWnd, CheckingMousePos(x, y, FocusWnd, false), &FocusWnd);
+		UpdateSelectedButton(gInstance, hWnd, CheckingMousePos(&NewNode, x, y, FocusWnd, false), &FocusWnd);
 		return 0;
 
 	case WM_LBUTTONDOWN:
 		x = LOWORD(lParam);
 		y = HIWORD(lParam);
-		OnClickListener(gInstance, hWnd, CheckingMousePos(x, y, FocusWnd, true));
+		OnClickListener(gInstance, hWnd, CheckingMousePos(&NewNode, x, y, FocusWnd, true));
 		SendMessage(hWnd, WM_MOUSEMOVE, 0, 0);
 		return 0;
 
@@ -156,7 +157,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 		case 150: case 151:
 			if (type == 150) {
-				AppendNode(&HeadNode, CreateAlarm(tSelectedTime, MemoData));
+				CreateAlarm(tSelectedTime, MemoData, &NewNode);
+				AppendNode(&HeadNode, NewNode);
 				NewNode = NULL;		// 에러: NewNode의 위치를 WndMain.cpp로 바꿔야 할 듯함.
 			} else if (type == 151) {
 				free(NewNode); NewNode = NULL;

@@ -2,7 +2,6 @@
 #include "AlarmLib.h"
 #include "resource.h"
 
-
 void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM **NewNode) {
 
 	for (int i = 0; i < 7; i++) (*NewNode)->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
@@ -10,6 +9,7 @@ void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM **NewNode) {
 	wcsncpy((*NewNode)->MemoData, nMemoData, wcslen(nMemoData) + 1);
 	//wcsncpy((*NewNode)->szSoundFilePath, lpSoundFilePath, wcslen((*NewNode)->szSoundFilePath) + 1);
 	(*NewNode)->NextAlarm = NULL;
+	(*NewNode)->OnOff = true;
 }
 
 void AppendNode(ALARM **HeadNode, ALARM *NewNode) {
@@ -36,6 +36,7 @@ void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
 		TimeFont = CreateFont(25, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"굴림체");
 		MemoFont = CreateFont(15, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"굴림체");
 		RepeatFont = CreateFont(10, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"굴림체");
+		
 		OldFont = (HFONT)SelectObject(hdc, TimeFont);
 		SetTextColor(hdc, RGB(37, 177, 245));
 		while (HeadNode != NULL) {
@@ -43,15 +44,50 @@ void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
 			_itow(HeadNode->time.Hou, Buf_Hour, 10);
 			_itow(HeadNode->time.Min, Buf_Minu, 10);
 			SetTextAlign(hdc, TA_CENTER);
+			SelectObject(hdc, TimeFont);
 			TextOut(hdc, 90, PrintAlarm_y, Buf_Hour, wcslen(Buf_Hour));
 			TextOut(hdc, 109, PrintAlarm_y, L":", wcslen(L":"));
 			TextOut(hdc, 128, PrintAlarm_y, Buf_Minu, wcslen(Buf_Minu));
+
 			SetTextAlign(hdc, TA_LEFT);
 			SelectObject(hdc, MemoFont);
 			TextOut(hdc, 155, PrintAlarm_y, HeadNode->MemoData, wcslen(HeadNode->MemoData));
+			
+			SelectObject(hdc, RepeatFont);
+			int count = 0;
+			for (int i = 0; i < 7; i++) {
+				if (HeadNode->time.RepeatWeek[i]) {
+					count++;
+					switch (i) {
+					case 0:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"월", wcslen(L"월"));
+						break;
+					case 1:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"화", wcslen(L"화"));
+						break;
+					case 2:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"수", wcslen(L"수"));
+						break;
+					case 3:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"목", wcslen(L"목"));
+						break;
+					case 4:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"금", wcslen(L"금"));
+						break;
+					case 5:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"토", wcslen(L"토"));
+						break;
+					case 6:
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"일", wcslen(L"일"));
+						break;
+					}
+				}
+			}
+
 			SelectObject(hdc, TimeFont);
 			PrintAlarm_y += 49;
 			PrintAlarmBorder_y += 49;
+
 			HeadNode = HeadNode->NextAlarm;
 		}
 		SelectObject(hdc, OldFont);

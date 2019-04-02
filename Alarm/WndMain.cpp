@@ -1,5 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "AlarmLib.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -35,7 +37,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	hWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME,
+	hWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME,	//  | WS_SYSMENU | WS_CAPTION
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
@@ -47,10 +49,30 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	return Msg.wParam;
 }
 
+void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
+	if (HeadNode != NULL) {
+		ALARM *Current = HeadNode;
+		time_t t = time(NULL);
+		struct tm CurrentTime = *localtime(&t);
+
+		while (Current != NULL) {
+			if (Current->OnOff && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
+				Current->OnOff = false;
+				MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK);
+			}
+
+			Current = Current->NextAlarm;
+		}
+	}
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	int x, y;
 
 	switch (iMessage) {
+
+	case WM_CREATE:
+		SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc);
 
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMaxTrackSize.x = 500;
@@ -96,6 +118,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_DESTROY:
+		KillTimer(hWnd, 1);
 		PostQuitMessage(0);
 		return 0;
 	}

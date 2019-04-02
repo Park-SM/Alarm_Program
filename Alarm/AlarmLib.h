@@ -18,7 +18,7 @@ typedef struct tagAlarm {
 	TIME time;
 	WCHAR szSoundFilePath[512];
 	LPWSTR MemoData;
-	bool exist;
+	bool OnOff;
 	struct tagAlarm *NextAlarm;
 }ALARM;
 

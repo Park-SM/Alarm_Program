@@ -9,15 +9,20 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
 
 HINSTANCE gInstance;
 LPCWSTR lpszClassN = L"Park Alarm";
+
 int FocusWnd = 0;
 bool bAddMenu = false;
 bool AddMenuFirstMotion = true;
 bool bModifyMenu = false;
+
 ALARM *HeadNode = NULL;
 ALARM *NewNode = NULL;
+int PrintNodePoint = 0;
+
 TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 int MemoDataLen = 0;
+
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;
@@ -56,7 +61,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 		struct tm CurrentTime = *localtime(&t);
 
 		while (Current != NULL) {
-			if (Current->OnOff && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
+			if (Current->OnOff && Current->time.RepeatWeek[CurrentTime.tm_wday] && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
 				Current->OnOff = false;
 				MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK);
 			}
@@ -86,7 +91,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		hdc = BeginPaint(hWnd, &ps);
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
-		PrintAlarmList(HeadNode, hdc);
+		PrintAlarmList(HeadNode, gInstance, hdc, PrintNodePoint);
 		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &NewNode, &AddMenuFirstMotion, &FocusWnd);
 		if (bModifyMenu);
 		EndPaint(hWnd, &ps);
@@ -129,7 +134,6 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 	HDC hdc;
 	static int OldHourType = 0;
 	static int OldMinuteType = 0;
-	static int OldRepeatWeekType[7] = { 0, };
 
 	if (FocusWnd == 0) {
 		switch (type) {
@@ -153,6 +157,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		}
 	} else if (FocusWnd == 1) {
 		switch (type) {
+		// Hour
 		case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:
 		case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43:
 			PrintSelectedButton(Instance, hWnd, OldHourType, &FocusWnd, false);
@@ -161,6 +166,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			tSelectedTime->Hou = type;
 			break;
 
+		// Minute
 		case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 58: case 59: case 60: case 61:
 		case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73:
 		case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85:
@@ -172,17 +178,19 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			tSelectedTime->Min = type;
 			break;
 
+		// RepeatWeek
 		case 120: case 121: case 122: case 123: case 124: case 125: case 126:
 			if (tSelectedTime->RepeatWeek[type - 120] == 0) tSelectedTime->RepeatWeek[type - 120] = 1;
 			else tSelectedTime->RepeatWeek[type - 120] = 0;
 			InvalidateRect(hWnd, NULL, true);
 			break;
 
+		// Button for Create and Cancel.
 		case 150: case 151:
 			if (type == 150) {
 				CreateAlarm(tSelectedTime, MemoData, &NewNode);
-				AppendNode(&HeadNode, NewNode);
-				NewNode = NULL;		// 에러: NewNode의 위치를 WndMain.cpp로 바꿔야 할 듯함.
+				if (AppendNode(&HeadNode, NewNode) > 10) PrintNodePoint++;
+				NewNode = NULL;
 			} else if (type == 151) {
 				free(NewNode); NewNode = NULL;
 			}

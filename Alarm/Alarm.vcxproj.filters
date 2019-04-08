@@ -78,5 +78,11 @@
     <Image Include="AddMenu_Cancel.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="UpArrow.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="DownArrow.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

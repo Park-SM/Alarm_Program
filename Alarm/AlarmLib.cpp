@@ -3,7 +3,6 @@
 #include "resource.h"
 
 void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM **NewNode) {
-
 	for (int i = 0; i < 7; i++) (*NewNode)->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
 	(*NewNode)->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 	wcsncpy((*NewNode)->MemoData, nMemoData, wcslen(nMemoData) + 1);
@@ -12,22 +11,30 @@ void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM **NewNode) {
 	(*NewNode)->OnOff = true;
 }
 
-void AppendNode(ALARM **HeadNode, ALARM *NewNode) {
+int AppendNode(ALARM **HeadNode, ALARM *NewNode) {		// Return value is the number of Node.
+	int count = 0;
 	if (*HeadNode == NULL) {
 		*HeadNode = NewNode;
 	} else {
 		ALARM *TailNode = *HeadNode;
-		while (TailNode->NextAlarm != NULL) TailNode = TailNode->NextAlarm;
+		while (TailNode->NextAlarm != NULL) {
+			TailNode = TailNode->NextAlarm;
+			count++;
+		}
+		count++; // Counting for last node.
 		TailNode->NextAlarm = NewNode;
 	}
+	return ++count;	// ++ is the NewNode.
 }
 
-void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
+void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodePoint) {
 	if (HeadNode != NULL) {
 		int PrintAlarm_y = 142;
 		int PrintAlarmBorder_y = 130;
 		LPWSTR Buf_Hour = (LPWSTR)calloc(1, sizeof(wchar_t));
 		LPWSTR Buf_Minu = (LPWSTR)calloc(1, sizeof(wchar_t));
+		HDC MemDC;
+		HBITMAP UpBit, DownBit, OldBit;
 		HPEN BorderPen, OldPen;
 		HFONT TimeFont, MemoFont, RepeatFont, OldFont;
 
@@ -39,7 +46,8 @@ void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
 		
 		OldFont = (HFONT)SelectObject(hdc, TimeFont);
 		SetTextColor(hdc, RGB(37, 177, 245));
-		while (HeadNode != NULL) {
+		for (int i = 0; i < PrintNodePoint; i++) HeadNode = HeadNode->NextAlarm;
+		for (int i = PrintNodePoint; i < PrintNodePoint + 10 && HeadNode != NULL; i++) {					// Printing alarm object.
 			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
 			_itow(HeadNode->time.Hou, Buf_Hour, 10);
 			_itow(HeadNode->time.Min, Buf_Minu, 10);
@@ -60,25 +68,25 @@ void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
 					count++;
 					switch (i) {
 					case 0:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"월", wcslen(L"월"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"일", wcslen(L"일"));
 						break;
 					case 1:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"화", wcslen(L"화"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"월", wcslen(L"월"));
 						break;
 					case 2:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"수", wcslen(L"수"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"화", wcslen(L"화"));
 						break;
 					case 3:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"목", wcslen(L"목"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"수", wcslen(L"수"));
 						break;
 					case 4:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"금", wcslen(L"금"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"목", wcslen(L"목"));
 						break;
 					case 5:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"토", wcslen(L"토"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"금", wcslen(L"금"));
 						break;
 					case 6:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"일", wcslen(L"일"));
+						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"토", wcslen(L"토"));
 						break;
 					}
 				}
@@ -91,9 +99,25 @@ void PrintAlarmList(ALARM *HeadNode, HDC hdc) {
 			HeadNode = HeadNode->NextAlarm;
 		}
 		SelectObject(hdc, OldFont);
+		SelectObject(hdc, OldPen);
+
+		if (PrintNodePoint) {
+			MemDC = CreateCompatibleDC(hdc);
+			UpBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP14));
+			DownBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP15));
+			
+			OldBit = (HBITMAP)SelectObject(MemDC, UpBit);
+			BitBlt(hdc, 442, 130, 19, 17, MemDC, 0, 0, SRCCOPY);
+
+			SelectObject(MemDC, DownBit);
+			BitBlt(hdc, 442, 620, 19, 17, MemDC, 0, 0, SRCCOPY);
+
+			SelectObject(hdc, OldBit);
+			DeleteObject(UpBit);
+		}
+
 		DeleteObject(TimeFont);
 		DeleteObject(MemoFont);
-		SelectObject(hdc, OldPen);
 		DeleteObject(BorderPen);
 
 	}

@@ -138,8 +138,10 @@
     <Image Include="Bar.bmp" />
     <Image Include="Copy.bmp" />
     <Image Include="Delete.bmp" />
+    <Image Include="DownArrow.bmp" />
     <Image Include="MainTitle.bmp" />
     <Image Include="Modify.bmp" />
+    <Image Include="UpArrow.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

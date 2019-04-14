@@ -22,6 +22,7 @@ int PrintNodePoint = 0;
 TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 int MemoDataLen = 0;
+int NumOfAlarm = 0;
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
@@ -154,6 +155,16 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			MessageBox(hWnd, L"Click Copy button!!", L"From. Park Alarm", MB_OK);
 			break;
 
+		case 5:
+			if (PrintNodePoint > 0) PrintNodePoint--;
+			InvalidateRect(hWnd, NULL, true);
+			break;
+
+		case 6:
+			if (NumOfAlarm - PrintNodePoint > 10) PrintNodePoint++;
+			InvalidateRect(hWnd, NULL, true);
+			break;
+
 		}
 	} else if (FocusWnd == 1) {
 		switch (type) {
@@ -189,7 +200,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		case 150: case 151:
 			if (type == 150) {
 				CreateAlarm(tSelectedTime, MemoData, &NewNode);
-				if (AppendNode(&HeadNode, NewNode) > 10) PrintNodePoint++;
+				NumOfAlarm = AppendNode(&HeadNode, NewNode);
+				if (NumOfAlarm > 10) PrintNodePoint++;
 				NewNode = NULL;
 			} else if (type == 151) {
 				free(NewNode); NewNode = NULL;

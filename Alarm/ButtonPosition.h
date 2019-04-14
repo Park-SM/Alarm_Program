@@ -23,6 +23,15 @@
 #define COPY_RIGHT 370
 #define COPY_BOTTOM 115
 
+#define LISTCTRL_UP_LEFT 442
+#define LISTCTRL_UP_TOP 130
+#define LISTCTRL_UP_RIGHT 461
+#define LISTCTRL_UP_BOTTOM 147
+
+#define LISTCTRL_DOWN_LEFT 442
+#define LISTCTRL_DOWN_TOP 603
+#define LISTCTRL_DOWN_RIGHT 461
+#define LISTCTRL_DOWN_BOTTOM 620
 
 /*
 //	Add-menu's selected button position.

@@ -43,7 +43,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		TimeFont = CreateFont(25, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
 		MemoFont = CreateFont(15, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
 		RepeatFont = CreateFont(10, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
-		
+
 		OldFont = (HFONT)SelectObject(hdc, TimeFont);
 		SetTextColor(hdc, RGB(37, 177, 245));
 		for (int i = 0; i < PrintNodePoint; i++) HeadNode = HeadNode->NextAlarm;
@@ -60,7 +60,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			SetTextAlign(hdc, TA_LEFT);
 			SelectObject(hdc, MemoFont);
 			TextOut(hdc, 155, PrintAlarm_y, HeadNode->MemoData, wcslen(HeadNode->MemoData));
-			
+
 			SelectObject(hdc, RepeatFont);
 			int count = 0;
 			for (int i = 0; i < 7; i++) {
@@ -101,20 +101,19 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		SelectObject(hdc, OldFont);
 		SelectObject(hdc, OldPen);
 
-		if (PrintNodePoint) {
-			MemDC = CreateCompatibleDC(hdc);
-			UpBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP14));
-			DownBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP15));
-			
-			OldBit = (HBITMAP)SelectObject(MemDC, UpBit);
-			BitBlt(hdc, 442, 130, 19, 17, MemDC, 0, 0, SRCCOPY);
+		MemDC = CreateCompatibleDC(hdc);
+		UpBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP14));
+		DownBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP15));
 
-			SelectObject(MemDC, DownBit);
-			BitBlt(hdc, 442, 620, 19, 17, MemDC, 0, 0, SRCCOPY);
+		OldBit = (HBITMAP)SelectObject(MemDC, UpBit);
+		BitBlt(hdc, 442, 130, 19, 17, MemDC, 0, 0, SRCCOPY);
 
-			SelectObject(hdc, OldBit);
-			DeleteObject(UpBit);
-		}
+		SelectObject(MemDC, DownBit);
+		BitBlt(hdc, 442, 603, 19, 17, MemDC, 0, 0, SRCCOPY);
+
+		SelectObject(hdc, OldBit);
+		DeleteObject(UpBit);
+		DeleteObject(DownBit);
 
 		DeleteObject(TimeFont);
 		DeleteObject(MemoFont);
@@ -189,6 +188,8 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd,
 			case 2: Rectangle(hdc, MODIFY_LEFT, MODIFY_TOP, MODIFY_RIGHT, MODIFY_BOTTOM); break;
 			case 3: Rectangle(hdc, DELETE_LEFT, DELETE_TOP, DELETE_RIGHT, DELETE_BOTTOM); break;
 			case 4: Rectangle(hdc, COPY_LEFT, COPY_TOP, COPY_RIGHT, COPY_BOTTOM); break;
+			case 5: Rectangle(hdc, LISTCTRL_UP_LEFT, LISTCTRL_UP_TOP, LISTCTRL_UP_RIGHT, LISTCTRL_UP_BOTTOM); break;
+			case 6: Rectangle(hdc, LISTCTRL_DOWN_LEFT, LISTCTRL_DOWN_TOP, LISTCTRL_DOWN_RIGHT, LISTCTRL_DOWN_BOTTOM); break;
 			}
 		}
 		else if (*FocusWnd == 1) {
@@ -316,6 +317,8 @@ int CheckingMousePos(ALARM **NewNode, int x, int y, int FocusWnd, bool click) {
 		else if (x > MODIFY_LEFT && x < MODIFY_RIGHT && y > MODIFY_TOP && y < MODIFY_BOTTOM) return 2;
 		else if (x > DELETE_LEFT && x < DELETE_RIGHT && y > DELETE_TOP && y < DELETE_BOTTOM) return 3;
 		else if (x > COPY_LEFT && x < COPY_RIGHT && y > COPY_TOP && y < COPY_BOTTOM) return 4;
+		else if (x > LISTCTRL_UP_LEFT && x < LISTCTRL_UP_RIGHT && y > LISTCTRL_UP_TOP && y < LISTCTRL_UP_BOTTOM) return 5;
+		else if (x > LISTCTRL_DOWN_LEFT && x < LISTCTRL_DOWN_RIGHT && y > LISTCTRL_DOWN_TOP && y < LISTCTRL_DOWN_BOTTOM) return 6;
 		else return 0;
 	}
 	else if (FocusWnd == 1) {
@@ -450,6 +453,8 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd
 		case 2: if (bPSB) { PrintSelectedButton(Instance, hWnd, 2, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 2; } return;
 		case 3: if (bPSB) { PrintSelectedButton(Instance, hWnd, 3, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 3; } return;
 		case 4: if (bPSB) { PrintSelectedButton(Instance, hWnd, 4, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 4; } return;
+		case 5: if (bPSB) { PrintSelectedButton(Instance, hWnd, 5, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 5; } return;
+		case 6: if (bPSB) { PrintSelectedButton(Instance, hWnd, 6, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 6; } return;
 		case 0: if (bPNSB) { PrintSelectedButton(Instance, hWnd, onButtonType, FocusWnd, false); bPSB = true; bPNSB = false; } return;
 		}
 	} else if (*FocusWnd == 1) {

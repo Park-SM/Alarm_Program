@@ -324,121 +324,115 @@ int CheckingMousePos(ALARM **NewNode, int x, int y, int FocusWnd, bool click) {
 	else if (FocusWnd == 1) {
 		if (x > HB_LEFT && x < HB_RIGHT && y > HB_TOP && y < HB_BOTTOM) {
 			if (click && x > X0 && x < X1 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 1; return 20; }
-			if (click && x > X1 && x < X2 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 2;  return 21; }
-			if (click && x > X2 && x < X3 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 3;  return 22;	}
-			if (click && x > X3 && x < X4 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 4;  return 23; }
-			if (click && x > X4 && x < X5 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 5;  return 24; }
-			if (click && x > X5 && x < X6 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 6;  return 25; }
-			if (click && x > X6 && x < X7 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 7;  return 26; }
-			if (click && x > X7 && x < X8 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 8;  return 27; }
-			if (click && x > X8 && x < X9 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 9;  return 28; }
-			if (click && x > X9 && x < X10 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 10;  return 29; }
-			if (click && x > X10 && x < X11 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 11;  return 30; }
-			if (click && x > X11 && x < X12 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 12;  return 31; }
+			else if (click && x > X1 && x < X2 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 2;  return 21; }
+			else if (click && x > X2 && x < X3 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 3;  return 22;	}
+			else if (click && x > X3 && x < X4 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 4;  return 23; }
+			else if (click && x > X4 && x < X5 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 5;  return 24; }
+			else if (click && x > X5 && x < X6 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 6;  return 25; }
+			else if (click && x > X6 && x < X7 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 7;  return 26; }
+			else if (click && x > X7 && x < X8 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 8;  return 27; }
+			else if (click && x > X8 && x < X9 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 9;  return 28; }
+			else if (click && x > X9 && x < X10 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 10;  return 29; }
+			else if (click && x > X10 && x < X11 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 11;  return 30; }
+			else if (click && x > X11 && x < X12 && y > Y0 && y < Y1) { (*NewNode)->time.Hou = 12;  return 31; }
 
-			if (click && x > X0 && x < X1 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 13;  return 32; }
-			if (click && x > X1 && x < X2 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 14;  return 33; }
-			if (click && x > X2 && x < X3 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 15;  return 34; }
-			if (click && x > X3 && x < X4 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 16;  return 35; }
-			if (click && x > X4 && x < X5 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 17;  return 36; }
-			if (click && x > X5 && x < X6 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 18;  return 37; }
-			if (click && x > X6 && x < X7 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 19;  return 38; }
-			if (click && x > X7 && x < X8 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 20;  return 39; }
-			if (click && x > X8 && x < X9 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 21;  return 40; }
-			if (click && x > X9 && x < X10 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 22;  return 41; }
-			if (click && x > X10 && x < X11 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 23;  return 42; }
-			if (click && x > X11 && x < X12 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 00;  return 43; }
-			return 1;
-		}
-		if (x > MB_LEFT && x < MB_RIGHT && y > MB_TOP && y < MB_BOTTOM) {
+			else if (click && x > X0 && x < X1 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 13;  return 32; }
+			else if (click && x > X1 && x < X2 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 14;  return 33; }
+			else if (click && x > X2 && x < X3 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 15;  return 34; }
+			else if (click && x > X3 && x < X4 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 16;  return 35; }
+			else if (click && x > X4 && x < X5 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 17;  return 36; }
+			else if (click && x > X5 && x < X6 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 18;  return 37; }
+			else if (click && x > X6 && x < X7 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 19;  return 38; }
+			else if (click && x > X7 && x < X8 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 20;  return 39; }
+			else if (click && x > X8 && x < X9 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 21;  return 40; }
+			else if (click && x > X9 && x < X10 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 22;  return 41; }
+			else if (click && x > X10 && x < X11 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 23;  return 42; }
+			else if (click && x > X11 && x < X12 && y > Y1 && y < Y2) { (*NewNode)->time.Hou = 00;  return 43; }
+			else return 1; }
+		else if (x > MB_LEFT && x < MB_RIGHT && y > MB_TOP && y < MB_BOTTOM) {
 			if (click && x > X0 && x < X1 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 0; return 50; }
-			if (click && x > X1 && x < X2 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 1; return 51; }
-			if (click && x > X2 && x < X3 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 2; return 52; }
-			if (click && x > X3 && x < X4 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 3; return 53; }
-			if (click && x > X4 && x < X5 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 4; return 54; }
-			if (click && x > X5 && x < X6 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 5; return 55; }
-			if (click && x > X6 && x < X7 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 6; return 56; }
-			if (click && x > X7 && x < X8 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 7; return 57; }
-			if (click && x > X8 && x < X9 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 8; return 58; }
-			if (click && x > X9 && x < X10 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 9; return 59; }
-			if (click && x > X10 && x < X11 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 10; return 60; }
-			if (click && x > X11 && x < X12 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 11; return 61; }
+			else if (click && x > X1 && x < X2 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 1; return 51; }
+			else if (click && x > X2 && x < X3 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 2; return 52; }
+			else if (click && x > X3 && x < X4 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 3; return 53; }
+			else if (click && x > X4 && x < X5 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 4; return 54; }
+			else if (click && x > X5 && x < X6 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 5; return 55; }
+			else if (click && x > X6 && x < X7 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 6; return 56; }
+			else if (click && x > X7 && x < X8 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 7; return 57; }
+			else if (click && x > X8 && x < X9 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 8; return 58; }
+			else if (click && x > X9 && x < X10 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 9; return 59; }
+			else if (click && x > X10 && x < X11 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 10; return 60; }
+			else if (click && x > X11 && x < X12 && y > Y3 && y < Y4) { (*NewNode)->time.Min = 11; return 61; }
 
-			if (click && x > X0 && x < X1 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 12; return 62; }
-			if (click && x > X1 && x < X2 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 13; return 63; }
-			if (click && x > X2 && x < X3 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 14; return 64; }
-			if (click && x > X3 && x < X4 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 15; return 65; }
-			if (click && x > X4 && x < X5 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 16; return 66; }
-			if (click && x > X5 && x < X6 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 17; return 67; }
-			if (click && x > X6 && x < X7 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 18; return 68; }
-			if (click && x > X7 && x < X8 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 19; return 69; }
-			if (click && x > X8 && x < X9 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 20; return 70; }
-			if (click && x > X9 && x < X10 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 21; return 71; }
-			if (click && x > X10 && x < X11 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 22; return 72; }
-			if (click && x > X11 && x < X12 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 23; return 73; }
+			else if (click && x > X0 && x < X1 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 12; return 62; }
+			else if (click && x > X1 && x < X2 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 13; return 63; }
+			else if (click && x > X2 && x < X3 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 14; return 64; }
+			else if (click && x > X3 && x < X4 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 15; return 65; }
+			else if (click && x > X4 && x < X5 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 16; return 66; }
+			else if (click && x > X5 && x < X6 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 17; return 67; }
+			else if (click && x > X6 && x < X7 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 18; return 68; }
+			else if (click && x > X7 && x < X8 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 19; return 69; }
+			else if (click && x > X8 && x < X9 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 20; return 70; }
+			else if (click && x > X9 && x < X10 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 21; return 71; }
+			else if (click && x > X10 && x < X11 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 22; return 72; }
+			else if (click && x > X11 && x < X12 && y > Y4 && y < Y5) { (*NewNode)->time.Min = 23; return 73; }
 
-			if (click && x > X0 && x < X1 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 24; return 74; }
-			if (click && x > X1 && x < X2 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 25; return 75; }
-			if (click && x > X2 && x < X3 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 26; return 76; }
-			if (click && x > X3 && x < X4 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 27; return 77; }
-			if (click && x > X4 && x < X5 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 28; return 78; }
-			if (click && x > X5 && x < X6 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 29; return 79; }
-			if (click && x > X6 && x < X7 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 30; return 80; }
-			if (click && x > X7 && x < X8 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 31; return 81; }
-			if (click && x > X8 && x < X9 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 32; return 82; }
-			if (click && x > X9 && x < X10 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 33; return 83; }
-			if (click && x > X10 && x < X11 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 34; return 84; }
-			if (click && x > X11 && x < X12 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 35; return 85; }
+			else if (click && x > X0 && x < X1 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 24; return 74; }
+			else if (click && x > X1 && x < X2 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 25; return 75; }
+			else if (click && x > X2 && x < X3 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 26; return 76; }
+			else if (click && x > X3 && x < X4 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 27; return 77; }
+			else if (click && x > X4 && x < X5 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 28; return 78; }
+			else if (click && x > X5 && x < X6 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 29; return 79; }
+			else if (click && x > X6 && x < X7 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 30; return 80; }
+			else if (click && x > X7 && x < X8 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 31; return 81; }
+			else if (click && x > X8 && x < X9 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 32; return 82; }
+			else if (click && x > X9 && x < X10 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 33; return 83; }
+			else if (click && x > X10 && x < X11 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 34; return 84; }
+			else if (click && x > X11 && x < X12 && y > Y5 && y < Y6) { (*NewNode)->time.Min = 35; return 85; }
 
-			if (click && x > X0 && x < X1 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 36; return 86; }
-			if (click && x > X1 && x < X2 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 37; return 87; }
-			if (click && x > X2 && x < X3 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 38; return 88; }
-			if (click && x > X3 && x < X4 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 39; return 89; }
-			if (click && x > X4 && x < X5 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 40; return 90; }
-			if (click && x > X5 && x < X6 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 41; return 91; }
-			if (click && x > X6 && x < X7 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 42; return 92; }
-			if (click && x > X7 && x < X8 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 43; return 93; }
-			if (click && x > X8 && x < X9 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 44; return 94; }
-			if (click && x > X9 && x < X10 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 45; return 95; }
-			if (click && x > X10 && x < X11 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 46; return 96; }
-			if (click && x > X11 && x < X12 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 47; return 97; }
+			else if (click && x > X0 && x < X1 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 36; return 86; }
+			else if (click && x > X1 && x < X2 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 37; return 87; }
+			else if (click && x > X2 && x < X3 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 38; return 88; }
+			else if (click && x > X3 && x < X4 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 39; return 89; }
+			else if (click && x > X4 && x < X5 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 40; return 90; }
+			else if (click && x > X5 && x < X6 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 41; return 91; }
+			else if (click && x > X6 && x < X7 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 42; return 92; }
+			else if (click && x > X7 && x < X8 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 43; return 93; }
+			else if (click && x > X8 && x < X9 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 44; return 94; }
+			else if (click && x > X9 && x < X10 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 45; return 95; }
+			else if (click && x > X10 && x < X11 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 46; return 96; }
+			else if (click && x > X11 && x < X12 && y > Y6 && y < Y7) { (*NewNode)->time.Min = 47; return 97; }
 
-			if (click && x > X0 && x < X1 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 48; return 98; }
-			if (click && x > X1 && x < X2 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 49; return 99; }
-			if (click && x > X2 && x < X3 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 50; return 100; }
-			if (click && x > X3 && x < X4 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 51; return 101; }
-			if (click && x > X4 && x < X5 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 52; return 102; }
-			if (click && x > X5 && x < X6 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 53; return 103; }
-			if (click && x > X6 && x < X7 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 54; return 104; }
-			if (click && x > X7 && x < X8 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 55; return 105; }
-			if (click && x > X8 && x < X9 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 56; return 106; }
-			if (click && x > X9 && x < X10 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 57; return 107; }
-			if (click && x > X10 && x < X11 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 58; return 108; }
-			if (click && x > X11 && x < X12 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 59; return 109; }
-
-			return 2;
+			else if (click && x > X0 && x < X1 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 48; return 98; }
+			else if (click && x > X1 && x < X2 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 49; return 99; }
+			else if (click && x > X2 && x < X3 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 50; return 100; }
+			else if (click && x > X3 && x < X4 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 51; return 101; }
+			else if (click && x > X4 && x < X5 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 52; return 102; }
+			else if (click && x > X5 && x < X6 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 53; return 103; }
+			else if (click && x > X6 && x < X7 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 54; return 104; }
+			else if (click && x > X7 && x < X8 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 55; return 105; }
+			else if (click && x > X8 && x < X9 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 56; return 106; }
+			else if (click && x > X9 && x < X10 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 57; return 107; }
+			else if (click && x > X10 && x < X11 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 58; return 108; }
+			else if (click && x > X11 && x < X12 && y > Y7 && y < Y8) { (*NewNode)->time.Min = 59; return 109; }
+			else return 2;
 		}
-		if (x > RB_LEFT && x < RB_RIGHT && y > RB_TOP && y < RB_BOTTOM) {
+		else if (x > RB_LEFT && x < RB_RIGHT && y > RB_TOP && y < RB_BOTTOM) {
 			if (click && x > R_X0 && x < R_X1 && y > Y9 && y < Y10) return 120;
-			if (click && x > R_X2 && x < R_X3 && y > Y9 && y < Y10) return 121;
-			if (click && x > R_X4 && x < R_X5 && y > Y9 && y < Y10) return 122;
-			if (click && x > R_X6 && x < R_X7 && y > Y9 && y < Y10) return 123;
-			if (click && x > R_X8 && x < R_X9 && y > Y9 && y < Y10) return 124;
-			if (click && x > R_X10 && x < R_X11 && y > Y9 && y < Y10) return 125;
-			if (click && x > R_X12 && x < R_X13 && y > Y9 && y < Y10) return 126;
-			
-			return 3; }
-		if (x > MEB_LEFT && x < MEB_RIGHT && y > MEB_TOP && y < MEB_BOTTOM) return 4;
-		if (x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) {
+			else if (click && x > R_X2 && x < R_X3 && y > Y9 && y < Y10) return 121;
+			else if (click && x > R_X4 && x < R_X5 && y > Y9 && y < Y10) return 122;
+			else if (click && x > R_X6 && x < R_X7 && y > Y9 && y < Y10) return 123;
+			else if (click && x > R_X8 && x < R_X9 && y > Y9 && y < Y10) return 124;
+			else if (click && x > R_X10 && x < R_X11 && y > Y9 && y < Y10) return 125;
+			else if (click && x > R_X12 && x < R_X13 && y > Y9 && y < Y10) return 126;
+			else return 3; }
+		else if (x > MEB_LEFT && x < MEB_RIGHT && y > MEB_TOP && y < MEB_BOTTOM) return 4;
+		else if (x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) {
 			if (click && x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) return 150;
-
-			return 5; }
-		if (x > CL_LEFT && x < CL_RIGHT && y > CL_TOP && y < CL_BOTTOM) {
+			else return 5; }
+		else if (x > CL_LEFT && x < CL_RIGHT && y > CL_TOP && y < CL_BOTTOM) {
 			if (click && x > CL_LEFT && x < CL_RIGHT && y > CL_TOP && y < CL_BOTTOM) return 151;
-			
-			return 6; }
-
-		return 0;
+			else return 6; }
+		else return 0;
 	}
 	return 0;
 }

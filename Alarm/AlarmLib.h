@@ -7,6 +7,11 @@
 
 #define MEMO_MAXBUF 18
 
+typedef struct tagPoint {
+	int x;
+	int y;
+}uPOINT;
+
 typedef struct tagTime {
 	int Hou;
 	int Min;

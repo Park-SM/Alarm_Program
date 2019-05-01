@@ -47,7 +47,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		OldFont = (HFONT)SelectObject(hdc, TimeFont);
 		SetTextColor(hdc, RGB(37, 177, 245));
 		for (int i = 0; i < PrintNodePoint; i++) HeadNode = HeadNode->NextAlarm;
-		for (int i = PrintNodePoint; i < PrintNodePoint + 10 && HeadNode != NULL; i++) {					// Printing alarm object.
+		for (int i = PrintNodePoint; i < PrintNodePoint + 10 && HeadNode != NULL; i++) {	// Printing alarm object.
 			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
 			_itow(HeadNode->time.Hou, Buf_Hour, 10);
 			_itow(HeadNode->time.Min, Buf_Minu, 10);
@@ -67,27 +67,13 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 				if (HeadNode->time.RepeatWeek[i]) {
 					count++;
 					switch (i) {
-					case 0:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"일", wcslen(L"일"));
-						break;
-					case 1:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"월", wcslen(L"월"));
-						break;
-					case 2:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"화", wcslen(L"화"));
-						break;
-					case 3:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"수", wcslen(L"수"));
-						break;
-					case 4:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"목", wcslen(L"목"));
-						break;
-					case 5:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"금", wcslen(L"금"));
-						break;
-					case 6:
-						TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"토", wcslen(L"토"));
-						break;
+					case 0: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"일", wcslen(L"일")); break;
+					case 1: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"월", wcslen(L"월")); break;
+					case 2: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"화", wcslen(L"화")); break;
+					case 3: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"수", wcslen(L"수")); break;
+					case 4: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"목", wcslen(L"목")); break;
+					case 5: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"금", wcslen(L"금")); break;
+					case 6: TextOut(hdc, 141 + (count * 15), PrintAlarm_y + 22, L"토", wcslen(L"토")); break;
 					}
 				}
 			}
@@ -319,6 +305,7 @@ int CheckingMousePos(ALARM **NewNode, int x, int y, int FocusWnd, bool click) {
 		else if (x > COPY_LEFT && x < COPY_RIGHT && y > COPY_TOP && y < COPY_BOTTOM) return 4;
 		else if (x > LISTCTRL_UP_LEFT && x < LISTCTRL_UP_RIGHT && y > LISTCTRL_UP_TOP && y < LISTCTRL_UP_BOTTOM) return 5;
 		else if (x > LISTCTRL_DOWN_LEFT && x < LISTCTRL_DOWN_RIGHT && y > LISTCTRL_DOWN_TOP && y < LISTCTRL_DOWN_BOTTOM) return 6;
+		else if (x > ALARMTABLE_LEFT && x < ALARMTABLE_RIGHT && y > ALARMTABLE_TOP && y < ALARMTABLE_BOTTOM) return 7;
 		else return 0;
 	}
 	else if (FocusWnd == 1) {

@@ -33,6 +33,11 @@
 #define LISTCTRL_DOWN_RIGHT 461
 #define LISTCTRL_DOWN_BOTTOM 620
 
+#define ALARMTABLE_LEFT 40
+#define ALARMTABLE_TOP 130
+#define ALARMTABLE_RIGHT 442
+#define ALARMTABLE_BOTTOM 620
+
 /*
 //	Add-menu's selected button position.
 */

@@ -9,6 +9,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
 
 HINSTANCE gInstance;
 LPCWSTR lpszClassN = L"Park Alarm";
+uPOINT mainCursor;
 
 int FocusWnd = 0;
 bool bAddMenu = false;
@@ -75,7 +76,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	int x, y;
-
+	
 	switch (iMessage) {
 
 	case WM_CREATE:
@@ -106,9 +107,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_LBUTTONDOWN:
-		x = LOWORD(lParam);
-		y = HIWORD(lParam);
-		OnClickListener(gInstance, hWnd, CheckingMousePos(&NewNode, x, y, FocusWnd, true));
+		mainCursor.x = LOWORD(lParam);
+		mainCursor.y = HIWORD(lParam);
+		OnClickListener(gInstance, hWnd, CheckingMousePos(&NewNode, mainCursor.x, mainCursor.y, FocusWnd, true));
 		SendMessage(hWnd, WM_MOUSEMOVE, 0, 0);
 		return 0;
 
@@ -166,6 +167,14 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			InvalidateRect(hWnd, NULL, true);
 			break;
 
+		case 7:
+			int i, t = 0;
+			for (i = PrintNodePoint + 1; i <= NumOfAlarm - PrintNodePoint; i++) {
+				if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (t * 49) && mainCursor.y < ALARMTABLE_TOP + (++t * 49)) break;
+			}
+			if (t == 2) MessageBox(hWnd, L"Click Alarm Table area!!", L"From. Park Alarm", MB_OK);
+			
+			break;
 		}
 	} else if (FocusWnd == 1) {
 		switch (type) {

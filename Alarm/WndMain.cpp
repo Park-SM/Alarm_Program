@@ -21,6 +21,7 @@ int PrintNodePoint = 0;
 
 TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
+RECT MemoRect = { MEB_LEFT, MEB_TOP, MEB_RIGHT, MEB_BOTTOM };
 int MemoDataLen = 0;
 int NumOfAlarm = 0;
 
@@ -120,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			MemoData[MemoDataLen] = wParam;
 			MemoData[++MemoDataLen] = 0;
 		}
-		InvalidateRect(hWnd, NULL, true);		// NULL부분을 최소화하기 ★★★★★★★★★★★★★★★
+		InvalidateRect(hWnd, &MemoRect, true);
 		return 0;
 
 	case WM_DESTROY:

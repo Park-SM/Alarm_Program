@@ -149,7 +149,7 @@ void PrintMainDisplay(HINSTANCE Instance, HWND hWnd, HDC hdc, PAINTSTRUCT *ps) {
 }
 
 ////
-void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd, bool exist) {
+void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd, bool exist) {
 	if (type != 0) {
 		HDC hdc;
 		HBRUSH RectBrush, OldBrush;
@@ -168,7 +168,7 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd,
 			OldPen = (HPEN)SelectObject(hdc, RectPen);
 		}
 
-		if (*FocusWnd == 0) {
+		if (FocusWnd == 0) {
 			switch (type) {
 			case 1: Rectangle(hdc, ADD_LEFT, ADD_TOP, ADD_RIGHT, ADD_BOTTOM); break;
 			case 2: Rectangle(hdc, MODIFY_LEFT, MODIFY_TOP, MODIFY_RIGHT, MODIFY_BOTTOM); break;
@@ -178,7 +178,7 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd,
 			case 6: Rectangle(hdc, LISTCTRL_DOWN_LEFT, LISTCTRL_DOWN_TOP, LISTCTRL_DOWN_RIGHT, LISTCTRL_DOWN_BOTTOM); break;
 			}
 		}
-		else if (*FocusWnd == 1) {
+		else if (FocusWnd == 1) {
 			switch (type) {
 			case 1: Rectangle(hdc, HB_LEFT, HB_TOP, HB_RIGHT, HB_BOTTOM); break;
 			case 2: Rectangle(hdc, MB_LEFT, MB_TOP, MB_RIGHT, MB_BOTTOM); break;
@@ -425,10 +425,10 @@ int CheckingMousePos(ALARM **NewNode, int x, int y, int FocusWnd, bool click) {
 }
 
 ////
-void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd) {
+void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd) {
 	static int onButtonType = 0;
 
-	if (*FocusWnd == 0) {
+	if (FocusWnd == 0) {
 		switch (type) {
 		case 1: if (bPSB) { PrintSelectedButton(Instance, hWnd, 1, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 1; } return;
 		case 2: if (bPSB) { PrintSelectedButton(Instance, hWnd, 2, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 2; } return;
@@ -438,7 +438,7 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int *FocusWnd
 		case 6: if (bPSB) { PrintSelectedButton(Instance, hWnd, 6, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 6; } return;
 		case 0: if (bPNSB) { PrintSelectedButton(Instance, hWnd, onButtonType, FocusWnd, false); bPSB = true; bPNSB = false; } return;
 		}
-	} else if (*FocusWnd == 1) {
+	} else if (FocusWnd == 1) {
 		switch (type) {
 		case 1: if (bPSB) { PrintSelectedButton(Instance, hWnd, 1, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 1; } return;
 		case 2: if (bPSB) { PrintSelectedButton(Instance, hWnd, 2, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 2; } return;
@@ -513,10 +513,10 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	DeleteObject(CancelBit);
 	DeleteDC(MemDC);
 
-	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, FocusWnd, true);
-	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, FocusWnd, true);
+	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, *FocusWnd, true);
+	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, *FocusWnd, true);
 	for (int i = 0; i < 7; i++) {
-		if (tSelectedTime.RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 120, FocusWnd, true);
+		if (tSelectedTime.RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 120, *FocusWnd, true);
 	}
 
 	Font = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");

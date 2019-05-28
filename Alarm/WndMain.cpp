@@ -103,7 +103,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		x = LOWORD(lParam);
 		y = HIWORD(lParam);
-		UpdateSelectedButton(gInstance, hWnd, CheckingMousePos(&NewNode, x, y, FocusWnd, false), &FocusWnd);
+		UpdateSelectedButton(gInstance, hWnd, CheckingMousePos(&NewNode, x, y, FocusWnd, false), FocusWnd);
 		return 0;
 
 	case WM_LBUTTONDOWN:
@@ -168,11 +168,12 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 7:
-			int i, t = 0;
-			for (i = PrintNodePoint + 1; i <= NumOfAlarm - PrintNodePoint; i++) {
-				if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (t * 49) && mainCursor.y < ALARMTABLE_TOP + (++t * 49)) break;
+			MessageBox(hWnd, L"Click Alarm Table area!!", L"From. Park Alarm", MB_OK);
+			int i;
+			for (i = PrintNodePoint; (i < NumOfAlarm - PrintNodePoint) && (i < 10);) {
+				if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) break;
 			}
-			if (t == 2) MessageBox(hWnd, L"Click Alarm Table area!!", L"From. Park Alarm", MB_OK);
+			if (i == 2) MessageBox(hWnd, L"Click Alarm Table area!!", L"From. Park Alarm", MB_OK);
 			
 			break;
 		}
@@ -181,8 +182,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		// Hour
 		case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:
 		case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43:
-			PrintSelectedButton(Instance, hWnd, OldHourType, &FocusWnd, false);
-			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
+			PrintSelectedButton(Instance, hWnd, OldHourType, FocusWnd, false);
+			PrintSelectedButton(Instance, hWnd, type, FocusWnd, true);
 			OldHourType = type;
 			tSelectedTime->Hou = type;
 			break;
@@ -193,8 +194,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85:
 		case 86: case 87: case 88: case 89: case 90: case 91: case 92: case 93: case 94: case 95: case 96: case 97:
 		case 98: case 99: case 100: case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109:
-			PrintSelectedButton(Instance, hWnd, OldMinuteType, &FocusWnd, false);
-			PrintSelectedButton(Instance, hWnd, type, &FocusWnd, true);
+			PrintSelectedButton(Instance, hWnd, OldMinuteType, FocusWnd, false);
+			PrintSelectedButton(Instance, hWnd, type, FocusWnd, true);
 			OldMinuteType = type;
 			tSelectedTime->Min = type;
 			break;

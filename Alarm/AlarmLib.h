@@ -24,12 +24,14 @@ typedef struct tagAlarm {
 	WCHAR szSoundFilePath[512];
 	LPWSTR MemoData;
 	bool OnOff;
+	bool Selected;
 	struct tagAlarm *NextAlarm;
 }ALARM;
 
 static bool bPSB = true, bPNSB = false;		// Print Selected Button, Print No Selected Button.
 
-void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM **NewNode);
+void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode);
+void DeleteAlarm(ALARM **HeadNode);
 int AppendNode(ALARM **HeadNode, ALARM *NewNode);
 void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodePoint);
 void PrintMainDisplay(HINSTANCE Instac, HWND hWnd, HDC hdc, PAINTSTRUCT *ps);

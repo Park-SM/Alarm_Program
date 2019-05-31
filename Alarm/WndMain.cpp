@@ -150,7 +150,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 3:
-			MessageBox(hWnd, L"Click Delete button!!", L"From. Park Alarm", MB_OK);
+			DeleteAlarm(&HeadNode);
+			InvalidateRect(hWnd, NULL, true);
 			break;
 
 		case 4:
@@ -168,13 +169,21 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 7:
-			MessageBox(hWnd, L"Click Alarm Table area!!", L"From. Park Alarm", MB_OK);
-			int i;
-			for (i = PrintNodePoint; (i < NumOfAlarm - PrintNodePoint) && (i < 10);) {
-				if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) break;
-			}
-			if (i == 2) MessageBox(hWnd, L"Click Alarm Table area!!", L"From. Park Alarm", MB_OK);
+			int i = 0;
+			ALARM *Current = NULL;
+			for (Current = HeadNode; Current != NULL; Current = Current->NextAlarm)
+				if (Current->Selected) Current->Selected = false;
 			
+			Current = HeadNode;
+			for (int t = 0; t < PrintNodePoint; t++) Current = Current->NextAlarm;
+
+			for (; Current != NULL && (i < 10); Current = Current->NextAlarm) {
+				if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) {
+					Current->Selected = true;
+					break;
+				}
+			}
+			InvalidateRect(hWnd, NULL, true);
 			break;
 		}
 	} else if (FocusWnd == 1) {
@@ -210,7 +219,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		// Button for Create and Cancel.
 		case 150: case 151:
 			if (type == 150) {
-				CreateAlarm(tSelectedTime, MemoData, &NewNode);
+				CreateAlarm(tSelectedTime, MemoData, NewNode);
 				NumOfAlarm = AppendNode(&HeadNode, NewNode);
 				if (NumOfAlarm > 10) PrintNodePoint++;
 				NewNode = NULL;

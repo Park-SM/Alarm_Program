@@ -2,13 +2,32 @@
 #include "AlarmLib.h"
 #include "resource.h"
 
-void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM **NewNode) {
-	for (int i = 0; i < 7; i++) (*NewNode)->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
-	(*NewNode)->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
-	wcsncpy((*NewNode)->MemoData, nMemoData, wcslen(nMemoData) + 1);
+void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode) {
+	for (int i = 0; i < 7; i++) NewNode->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
+	NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
+	wcsncpy(NewNode->MemoData, nMemoData, wcslen(nMemoData) + 1);
 	//wcsncpy((*NewNode)->szSoundFilePath, lpSoundFilePath, wcslen((*NewNode)->szSoundFilePath) + 1);
-	(*NewNode)->NextAlarm = NULL;
-	(*NewNode)->OnOff = true;
+	NewNode->NextAlarm = NULL;
+	NewNode->OnOff = true;
+	NewNode->Selected = false;
+}
+
+void DeleteAlarm(ALARM **HeadNode) {
+	if (*HeadNode != NULL) {
+		if ((*HeadNode)->Selected) {
+			ALARM *DeleteAlarm = *HeadNode;
+			*HeadNode = (*HeadNode)->NextAlarm;
+			free(DeleteAlarm);
+		} else {
+			ALARM *Current = *HeadNode;
+			while (Current != NULL && Current->NextAlarm->Selected) Current = Current->NextAlarm;
+			if (Current != NULL) {
+				ALARM *DeleteAlarm = Current->NextAlarm;
+				Current->NextAlarm = Current->NextAlarm->NextAlarm;
+				free(DeleteAlarm);
+			}
+		}
+	}
 }
 
 int AppendNode(ALARM **HeadNode, ALARM *NewNode) {		// Return value is the number of Node.
@@ -37,18 +56,27 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		HBITMAP UpBit, DownBit, OldBit;
 		HPEN BorderPen, OldPen;
 		HFONT TimeFont, MemoFont, RepeatFont, OldFont;
+		HBRUSH SelectedBrush, OldBrush;
 
 		BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
-		OldPen = (HPEN)SelectObject(hdc, BorderPen);
 		TimeFont = CreateFont(25, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
 		MemoFont = CreateFont(15, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
 		RepeatFont = CreateFont(10, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+		SelectedBrush = CreateSolidBrush(RGB(150, 200, 255));
 
+		OldPen = (HPEN)SelectObject(hdc, BorderPen);
 		OldFont = (HFONT)SelectObject(hdc, TimeFont);
+
 		SetTextColor(hdc, RGB(37, 177, 245));
 		for (int i = 0; i < PrintNodePoint; i++) HeadNode = HeadNode->NextAlarm;
 		for (int i = PrintNodePoint; i < PrintNodePoint + 10 && HeadNode != NULL; i++) {	// Printing alarm object.
+			OldBrush = (HBRUSH)SelectObject(hdc, SelectedBrush);
+			if (!(HeadNode->Selected)) {
+				SelectObject(hdc, OldBrush);
+				SetBkColor(hdc, RGB(255, 255, 255));
+			} else SetBkColor(hdc, RGB(150, 200, 255));
 			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
+			
 			_itow(HeadNode->time.Hou, Buf_Hour, 10);
 			_itow(HeadNode->time.Min, Buf_Minu, 10);
 			SetTextAlign(hdc, TA_CENTER);
@@ -82,6 +110,10 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			PrintAlarm_y += 49;
 			PrintAlarmBorder_y += 49;
 
+			if (HeadNode->Selected) {
+				SelectObject(hdc, OldBrush);
+				SetBkColor(hdc, RGB(255, 255, 255));
+			}
 			HeadNode = HeadNode->NextAlarm;
 		}
 		SelectObject(hdc, OldFont);
@@ -104,7 +136,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		DeleteObject(TimeFont);
 		DeleteObject(MemoFont);
 		DeleteObject(BorderPen);
-
+		DeleteObject(SelectedBrush);
 	}
 }
 

@@ -7,8 +7,8 @@ c:\users\park sang min\desktop\alarm\alarm\buttonposition.h(51): warning C4005: 
 c:\users\park sang min\desktop\alarm\alarm\wndmain.cpp(99): warning C4390: ';': 제어된 빈 문이 있습니다. 이 문이 필요합니까?
 c:\users\park sang min\desktop\alarm\alarm\wndmain.cpp(137): warning C4101: 'hdc' :참조되지 않은 지역 변수입니다.
   코드를 생성하고 있습니다.
-  8 of 17 functions (47.1%) were compiled, the rest were copied from previous compilation.
-    4 functions were new in current compilation
+  4 of 17 functions (23.5%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   Alarm.vcxproj -> C:\Users\Park Sang Min\Desktop\Alarm\Release\Alarm.exe

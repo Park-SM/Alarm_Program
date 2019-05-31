@@ -12,7 +12,7 @@ void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode) {
 	NewNode->Selected = false;
 }
 
-void DeleteAlarm(ALARM **HeadNode) {
+void DeleteAlarm(ALARM **HeadNode, int *NumOfAlarm) {
 	if (*HeadNode != NULL) {
 		if ((*HeadNode)->Selected) {
 			ALARM *DeleteAlarm = *HeadNode;
@@ -20,13 +20,14 @@ void DeleteAlarm(ALARM **HeadNode) {
 			free(DeleteAlarm);
 		} else {
 			ALARM *Current = *HeadNode;
-			while (Current != NULL && Current->NextAlarm->Selected) Current = Current->NextAlarm;
-			if (Current != NULL) {
+			while (Current->NextAlarm != NULL && !Current->NextAlarm->Selected) Current = Current->NextAlarm;
+			if (Current->NextAlarm != NULL) {
 				ALARM *DeleteAlarm = Current->NextAlarm;
 				Current->NextAlarm = Current->NextAlarm->NextAlarm;
 				free(DeleteAlarm);
 			}
 		}
+		(*NumOfAlarm)--;
 	}
 }
 

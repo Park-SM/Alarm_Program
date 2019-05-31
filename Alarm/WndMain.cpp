@@ -150,7 +150,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 3:
-			DeleteAlarm(&HeadNode);
+			DeleteAlarm(&HeadNode, &NumOfAlarm);
 			InvalidateRect(hWnd, NULL, true);
 			break;
 

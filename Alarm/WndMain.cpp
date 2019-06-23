@@ -14,10 +14,12 @@ uPOINT mainCursor;
 int FocusWnd = 0;
 bool bAddMenu = false;
 bool AddMenuFirstMotion = true;
+bool ModifyMenuFirstMotion = true;
 bool bModifyMenu = false;
 
 ALARM *HeadNode = NULL;
 ALARM *NewNode = NULL;
+ALARM *SelectedNode = NULL;
 int PrintNodePoint = 0;
 
 TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
@@ -96,7 +98,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
 		PrintAlarmList(HeadNode, gInstance, hdc, PrintNodePoint);
 		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &NewNode, &AddMenuFirstMotion, &FocusWnd);
-		if (bModifyMenu);
+		if (bModifyMenu) AppearModifyMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, SelectedNode, &ModifyMenuFirstMotion, &FocusWnd);
 		EndPaint(hWnd, &ps);
 		return 0;
 
@@ -146,7 +148,15 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 2:
-			MessageBox(hWnd, L"Click Modify button!!", L"From. Park Alarm", MB_OK);
+			if (HeadNode != NULL) {
+				SelectedNode = HeadNode;
+				while (SelectedNode != NULL && SelectedNode->Selected != true) SelectedNode = SelectedNode->NextAlarm;
+				if (SelectedNode != NULL) {
+					bModifyMenu = true;
+					InvalidateRect(hWnd, NULL, false);
+				}
+			}
+			//MessageBox(hWnd, L"Click Modify button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		case 3:

@@ -559,3 +559,66 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	SelectObject(hdc, OldFont);
 	DeleteObject(Font);
 }
+
+void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, ALARM *SelectedNode, bool *ModifyMenuFistMotion, int *FocusWnd) {
+	HDC MemDC;
+	HPEN BorderPen, OldPen;
+	HFONT Font, OldFont;
+	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, OldBit;
+
+	BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
+	OldPen = (HPEN)SelectObject(hdc, BorderPen);
+	if (*ModifyMenuFistMotion) {
+		for (int StayX = 1; StayX <= 35; StayX++) {
+			for (int Frame = StayX; Frame > 0; Frame--)
+				Rectangle(hdc, 500 - (StayX * 10), 50, 500, 450);
+			Sleep(15);
+		}
+		*FocusWnd = 2;
+		*ModifyMenuFistMotion = false;
+	}
+	else Rectangle(hdc, 150, 50, 500, 450);
+	SelectObject(hdc, OldPen);
+	DeleteObject(BorderPen);
+
+	MemDC = CreateCompatibleDC(hdc);
+	//TitleBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP11));
+	HourBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP7));
+	MinuteBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP8));
+	RepeatWeekBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP9));
+	MemoBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP10));
+	CreateBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP12));
+	CancelBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP13));
+
+	//OldBit = (HBITMAP)SelectObject(MemDC, TitleBit);
+	//BitBlt(hdc, 10, 55, 350, 55, MemDC, 0, 0, SRCCOPY);
+
+	OldBit = (HBITMAP)SelectObject(MemDC, HourBit);
+	BitBlt(hdc, 160, 105, 350, 55, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, MinuteBit);
+	BitBlt(hdc, 160, 170, 350, 110, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, RepeatWeekBit);
+	BitBlt(hdc, 160, 280, 350, 45, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, MemoBit);
+	BitBlt(hdc, 160, 325, 350, 45, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, CreateBit);
+	BitBlt(hdc, 315, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, CancelBit);
+	BitBlt(hdc, 400, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
+
+	SelectObject(MemDC, OldBit);
+	//DeleteObject(TitleBit);
+	DeleteObject(HourBit);
+	DeleteObject(MinuteBit);
+	DeleteObject(RepeatWeekBit);
+	DeleteObject(MemoBit);
+	DeleteObject(CreateBit);
+	DeleteObject(CancelBit);
+	DeleteDC(MemDC);
+
+}

@@ -25,6 +25,7 @@ int PrintNodePoint = 0;
 TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 RECT MemoRect = { MEB_LEFT, MEB_TOP, MEB_RIGHT, MEB_BOTTOM };
+RECT ModifyRect = { MEB_LEFT + 150, MEB_TOP, MEB_RIGHT + 150, MEB_BOTTOM };
 int MemoDataLen = 0;
 int NumOfAlarm = 0;
 
@@ -78,6 +79,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	int x, y;
+	int CheckedType;
 	
 	switch (iMessage) {
 
@@ -105,13 +107,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		x = LOWORD(lParam);
 		y = HIWORD(lParam);
-		UpdateSelectedButton(gInstance, hWnd, CheckingMousePos(&NewNode, x, y, FocusWnd, false), FocusWnd);
+		if (FocusWnd == 0) CheckedType = CheckingMousePos(NULL, NULL, x, y, FocusWnd, false);
+		else if (FocusWnd == 1) CheckedType = CheckingMousePos(NewNode, NULL, x, y, FocusWnd, false);
+		else if (FocusWnd == 2) CheckedType = CheckingMousePos(NULL, tSelectedTime, x, y, FocusWnd, false);
+		UpdateSelectedButton(gInstance, hWnd, CheckedType, FocusWnd);
 		return 0;
 
 	case WM_LBUTTONDOWN:
 		mainCursor.x = LOWORD(lParam);
 		mainCursor.y = HIWORD(lParam);
-		OnClickListener(gInstance, hWnd, CheckingMousePos(&NewNode, mainCursor.x, mainCursor.y, FocusWnd, true));
+		if (FocusWnd == 0) CheckedType = CheckingMousePos(NULL, NULL, mainCursor.x, mainCursor.y, FocusWnd, true);
+		else if (FocusWnd == 1) CheckedType = CheckingMousePos(NewNode, NULL, mainCursor.x, mainCursor.y, FocusWnd, true);
+		else if (FocusWnd == 2) CheckedType = CheckingMousePos(NULL, tSelectedTime, mainCursor.x, mainCursor.y, FocusWnd, true);
+		OnClickListener(gInstance, hWnd, CheckedType);
 		SendMessage(hWnd, WM_MOUSEMOVE, 0, 0);
 		return 0;
 
@@ -124,7 +132,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			MemoData[MemoDataLen] = wParam;
 			MemoData[++MemoDataLen] = 0;
 		}
-		InvalidateRect(hWnd, &MemoRect, true);
+		if (FocusWnd == 1) InvalidateRect(hWnd, &MemoRect, true);
+		else if (FocusWnd == 2) InvalidateRect(hWnd, &ModifyRect, true);
 		return 0;
 
 	case WM_DESTROY:
@@ -183,7 +192,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			ALARM *Current = NULL;
 			for (Current = HeadNode; Current != NULL; Current = Current->NextAlarm)
 				if (Current->Selected) Current->Selected = false;
-			
+
 			Current = HeadNode;
 			for (int t = 0; t < PrintNodePoint; t++) Current = Current->NextAlarm;
 
@@ -196,9 +205,10 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			InvalidateRect(hWnd, NULL, true);
 			break;
 		}
-	} else if (FocusWnd == 1) {
+	}
+	else if (FocusWnd == 1) {
 		switch (type) {
-		// Hour
+			// Hour
 		case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:
 		case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43:
 			PrintSelectedButton(Instance, hWnd, OldHourType, FocusWnd, false);
@@ -207,7 +217,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			tSelectedTime->Hou = type;
 			break;
 
-		// Minute
+			// Minute
 		case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: case 58: case 59: case 60: case 61:
 		case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73:
 		case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85:
@@ -219,27 +229,82 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			tSelectedTime->Min = type;
 			break;
 
-		// RepeatWeek
+			// RepeatWeek
 		case 120: case 121: case 122: case 123: case 124: case 125: case 126:
 			if (tSelectedTime->RepeatWeek[type - 120] == 0) tSelectedTime->RepeatWeek[type - 120] = 1;
 			else tSelectedTime->RepeatWeek[type - 120] = 0;
 			InvalidateRect(hWnd, NULL, true);
 			break;
 
-		// Button for Create and Cancel.
+			// Button for Create and Cancel.
 		case 150: case 151:
 			if (type == 150) {
 				CreateAlarm(tSelectedTime, MemoData, NewNode);
 				NumOfAlarm = AppendNode(&HeadNode, NewNode);
 				if (NumOfAlarm > 10) PrintNodePoint++;
 				NewNode = NULL;
-			} else if (type == 151) {
+			}
+			else if (type == 151) {
 				free(NewNode); NewNode = NULL;
 			}
 
 			FocusWnd = 0;
 			bAddMenu = false;
 			AddMenuFirstMotion = true;
+			memset(tSelectedTime, 0, sizeof(TIME));
+			memset(MemoData, 0, MEMO_MAXBUF * sizeof(wchar_t));
+			MemoDataLen = 0;
+
+			InvalidateRect(hWnd, NULL, true);
+			break;
+		}
+	}
+	else if (FocusWnd == 2) {
+		switch (type) {
+			// Hour
+		case 220: case 221: case 222: case 223: case 224: case 225: case 226: case 227: case 228: case 229: case 230: case 231:
+		case 232: case 233: case 234: case 235: case 236: case 237: case 238: case 239: case 240: case 241: case 242: case 243:
+			PrintSelectedButton(Instance, hWnd, OldHourType, FocusWnd, false);
+			PrintSelectedButton(Instance, hWnd, type, FocusWnd, true);
+			OldHourType = type;
+			tSelectedTime->Hou = type;
+			break;
+
+			// Minute
+		case 250: case 251: case 252: case 253: case 254: case 255: case 256: case 257: case 258: case 259: case 260: case 261:
+		case 262: case 263: case 264: case 265: case 266: case 267: case 268: case 269: case 270: case 271: case 272: case 273:
+		case 274: case 275: case 276: case 277: case 278: case 279: case 280: case 281: case 282: case 283: case 284: case 285:
+		case 286: case 287: case 288: case 289: case 290: case 291: case 292: case 293: case 294: case 295: case 296: case 297:
+		case 298: case 299: case 300: case 301: case 302: case 303: case 304: case 305: case 306: case 307: case 308: case 309:
+			PrintSelectedButton(Instance, hWnd, OldMinuteType, FocusWnd, false);
+			PrintSelectedButton(Instance, hWnd, type, FocusWnd, true);
+			OldMinuteType = type;
+			tSelectedTime->Min = type;
+			break;
+
+			// RepeatWeek
+		case 320: case 321: case 322: case 323: case 324: case 325: case 326:
+			if (tSelectedTime->RepeatWeek[type - 320] == 0) tSelectedTime->RepeatWeek[type - 320] = 1;
+			else tSelectedTime->RepeatWeek[type - 320] = 0;
+			InvalidateRect(hWnd, NULL, true);
+			break;
+
+			// Button for Create and Cancel.
+		case 350: case 351:
+			if (type == 350) {
+				if (tSelectedTime->Hou != 0) SelectedNode->time.Hou = tSelectedTime->Hou - 219;
+				else SelectedNode->time.Hou = 0;
+				
+				if (tSelectedTime->Min != 0) SelectedNode->time.Min = tSelectedTime->Min - 250;
+				else SelectedNode->time.Min = 0;
+
+				for (int i = 0; i < 7; i++) SelectedNode->time.RepeatWeek[i] = tSelectedTime->RepeatWeek[i];
+				wcsncpy(SelectedNode->MemoData, MemoData, wcslen(MemoData) + 1);
+			}
+
+			FocusWnd = 0;
+			bModifyMenu = false;
+			ModifyMenuFirstMotion = true;
 			memset(tSelectedTime, 0, sizeof(TIME));
 			memset(MemoData, 0, MEMO_MAXBUF * sizeof(wchar_t));
 			MemoDataLen = 0;

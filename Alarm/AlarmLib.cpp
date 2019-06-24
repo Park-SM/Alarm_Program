@@ -49,10 +49,12 @@ int AppendNode(ALARM **HeadNode, ALARM *NewNode) {		// Return value is the numbe
 
 void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodePoint) {
 	if (HeadNode != NULL) {
+		int SingleTimeDistanceH = 0;
+		int SingleTimeDistanceM = 0;
 		int PrintAlarm_y = 142;
 		int PrintAlarmBorder_y = 130;
-		LPWSTR Buf_Hour = (LPWSTR)calloc(1, sizeof(wchar_t));
-		LPWSTR Buf_Minu = (LPWSTR)calloc(1, sizeof(wchar_t));
+		LPWSTR Buf_Hour = (LPWSTR)calloc(3, sizeof(wchar_t));
+		LPWSTR Buf_Minu = (LPWSTR)calloc(3, sizeof(wchar_t));
 		HDC MemDC;
 		HBITMAP UpBit, DownBit, OldBit;
 		HPEN BorderPen, OldPen;
@@ -78,13 +80,23 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			} else SetBkColor(hdc, RGB(150, 200, 255));
 			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
 			
+			if (HeadNode->time.Hou < 10) {
+				SingleTimeDistanceH = 6;
+				TextOut(hdc, 77, PrintAlarm_y, L"0", wcslen(L"0"));
+			}
+			if (HeadNode->time.Min < 10) {
+				SingleTimeDistanceM = 6;
+				TextOut(hdc, 115, PrintAlarm_y, L"0", wcslen(L"0"));
+			}
 			_itow(HeadNode->time.Hou, Buf_Hour, 10);
 			_itow(HeadNode->time.Min, Buf_Minu, 10);
 			SetTextAlign(hdc, TA_CENTER);
 			SelectObject(hdc, TimeFont);
-			TextOut(hdc, 90, PrintAlarm_y, Buf_Hour, wcslen(Buf_Hour));
+			TextOut(hdc, 90 + SingleTimeDistanceH, PrintAlarm_y, Buf_Hour, wcslen(Buf_Hour));
 			TextOut(hdc, 109, PrintAlarm_y, L":", wcslen(L":"));
-			TextOut(hdc, 128, PrintAlarm_y, Buf_Minu, wcslen(Buf_Minu));
+			TextOut(hdc, 128 + SingleTimeDistanceM, PrintAlarm_y, Buf_Minu, wcslen(Buf_Minu));
+			SingleTimeDistanceH = 0;
+			SingleTimeDistanceM = 0;
 
 			SetTextAlign(hdc, TA_LEFT);
 			SelectObject(hdc, MemoFont);

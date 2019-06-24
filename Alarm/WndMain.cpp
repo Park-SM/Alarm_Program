@@ -100,7 +100,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		PrintMainDisplay(gInstance, hWnd, hdc, &ps);
 		PrintAlarmList(HeadNode, gInstance, hdc, PrintNodePoint);
 		if (bAddMenu) AppearAddMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, &NewNode, &AddMenuFirstMotion, &FocusWnd);
-		if (bModifyMenu) AppearModifyMenu(gInstance, hWnd, hdc, *tSelectedTime, MemoData, SelectedNode, &ModifyMenuFirstMotion, &FocusWnd);
+		if (bModifyMenu) AppearModifyMenu(gInstance, hWnd, hdc, tSelectedTime, MemoData, SelectedNode, &ModifyMenuFirstMotion, &FocusWnd);
 		EndPaint(hWnd, &ps);
 		return 0;
 
@@ -146,6 +146,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 	HDC hdc;
+	bool IsFirstH = true;	// Using for FocusWnd2
+	bool IsFirstM = true;	// Using for FocusWnd2
 	static int OldHourType = 0;
 	static int OldMinuteType = 0;
 
@@ -161,6 +163,11 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				SelectedNode = HeadNode;
 				while (SelectedNode != NULL && SelectedNode->Selected != true) SelectedNode = SelectedNode->NextAlarm;
 				if (SelectedNode != NULL) {
+					tSelectedTime->Hou = SelectedNode->time.Hou + 219;
+					tSelectedTime->Min = SelectedNode->time.Min + 250;
+					wcsncpy(MemoData, SelectedNode->MemoData, wcslen(SelectedNode->MemoData) + 1);
+					MemoDataLen = wcslen(SelectedNode->MemoData);
+					for (int i = 0; i < 7; i++) tSelectedTime->RepeatWeek[i] = SelectedNode->time.RepeatWeek[i];
 					bModifyMenu = true;
 					InvalidateRect(hWnd, NULL, false);
 				}
@@ -174,7 +181,27 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 4:
-			MessageBox(hWnd, L"Click Copy button!!", L"From. Park Alarm", MB_OK);
+			SelectedNode = HeadNode;
+			while (SelectedNode != NULL && SelectedNode->Selected != true) SelectedNode = SelectedNode->NextAlarm;
+			if (SelectedNode != NULL) {
+				NewNode = (ALARM*)calloc(1, sizeof(ALARM));
+				NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
+				wcsncpy(NewNode->MemoData, SelectedNode->MemoData, wcslen(SelectedNode->MemoData) + 1);
+				NewNode->NextAlarm = NULL;
+				NewNode->OnOff = true;
+				NewNode->Selected = false;
+				NewNode->time.Hou = SelectedNode->time.Hou;
+				NewNode->time.Min = SelectedNode->time.Min;
+				for (int i = 0; i < 7; i++) NewNode->time.RepeatWeek[i] = SelectedNode->time.RepeatWeek[i];
+
+				NumOfAlarm = AppendNode(&HeadNode, NewNode);
+				if (NumOfAlarm > 10) PrintNodePoint++;
+
+				NewNode = NULL;
+			}
+			SelectedNode = NULL;
+			InvalidateRect(hWnd, NULL, false);
+			//MessageBox(hWnd, L"Click Copy button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		case 5:
@@ -260,10 +287,12 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		}
 	}
 	else if (FocusWnd == 2) {
+
 		switch (type) {
 			// Hour
 		case 220: case 221: case 222: case 223: case 224: case 225: case 226: case 227: case 228: case 229: case 230: case 231:
 		case 232: case 233: case 234: case 235: case 236: case 237: case 238: case 239: case 240: case 241: case 242: case 243:
+			if (IsFirstH) { PrintSelectedButton(Instance, hWnd, SelectedNode->time.Hou + 219, FocusWnd, false); IsFirstH = false; }
 			PrintSelectedButton(Instance, hWnd, OldHourType, FocusWnd, false);
 			PrintSelectedButton(Instance, hWnd, type, FocusWnd, true);
 			OldHourType = type;
@@ -276,6 +305,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		case 274: case 275: case 276: case 277: case 278: case 279: case 280: case 281: case 282: case 283: case 284: case 285:
 		case 286: case 287: case 288: case 289: case 290: case 291: case 292: case 293: case 294: case 295: case 296: case 297:
 		case 298: case 299: case 300: case 301: case 302: case 303: case 304: case 305: case 306: case 307: case 308: case 309:
+			if (IsFirstM) { PrintSelectedButton(Instance, hWnd, SelectedNode->time.Min + 250, FocusWnd, false); IsFirstM = false; }
 			PrintSelectedButton(Instance, hWnd, OldMinuteType, FocusWnd, false);
 			PrintSelectedButton(Instance, hWnd, type, FocusWnd, true);
 			OldMinuteType = type;

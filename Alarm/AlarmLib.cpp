@@ -117,6 +117,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			}
 			HeadNode = HeadNode->NextAlarm;
 		}
+
 		SelectObject(hdc, OldFont);
 		SelectObject(hdc, OldPen);
 
@@ -791,7 +792,7 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	DeleteObject(Font);
 }
 
-void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, ALARM *SelectedNode, bool *ModifyMenuFistMotion, int *FocusWnd) {
+void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTime, LPWSTR MemoData, ALARM *SelectedNode, bool *ModifyMenuFistMotion, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
 	HFONT Font, OldFont;
@@ -852,10 +853,10 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime
 	DeleteObject(CancelBit);
 	DeleteDC(MemDC);
 
-	PrintSelectedButton(Instance, hWnd, tSelectedTime.Hou, *FocusWnd, true);
-	PrintSelectedButton(Instance, hWnd, tSelectedTime.Min, *FocusWnd, true);
+	PrintSelectedButton(Instance, hWnd, tSelectedTime->Hou, *FocusWnd, true);
+	PrintSelectedButton(Instance, hWnd, tSelectedTime->Min, *FocusWnd, true);
 	for (int i = 0; i < 7; i++) {
-		if (tSelectedTime.RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 320, *FocusWnd, true);
+		if (tSelectedTime->RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 320, *FocusWnd, true);
 	}
 
 	Font = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");

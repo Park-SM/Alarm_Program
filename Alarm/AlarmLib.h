@@ -39,6 +39,6 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd, 
 int CheckingMousePos(ALARM *TargetNode, TIME *tSelectedTime, int x, int y, int FocusWnd, bool click);
 void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd);
 void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, ALARM **NewNode, bool *AddMenuFirstMotion, int *FocusWnd);
-void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, ALARM *SelectedNode, bool *ModifyMenuFistMotion, int *FocusWnd);
+void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTime, LPWSTR MemoData, ALARM *SelectedNode, bool *ModifyMenuFistMotion, int *FocusWnd);
 
 #endif

@@ -125,7 +125,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_MOUSEWHEEL:
-		if ((SHORT)HIWORD(wParam) > 0) {
+		if ((short)HIWORD(wParam) > 0) {
 			if (PrintNodePoint > 0) PrintNodePoint--;
 			InvalidateRect(hWnd, &AlarmTableRect, false);
 		} else {
@@ -240,7 +240,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 					break;
 				}
 			}
-			InvalidateRect(hWnd, NULL, true);
+			InvalidateRect(hWnd, &AlarmTableRect, false);
 			break;
 		}
 	}
@@ -330,7 +330,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			InvalidateRect(hWnd, NULL, true);
 			break;
 
-			// Button for Create and Cancel.
+			// Button for Modify and Cancel.
 		case 350: case 351:
 			if (type == 350) {
 				if (tSelectedTime->Hou != 0) SelectedNode->time.Hou = tSelectedTime->Hou - 219;

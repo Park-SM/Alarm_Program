@@ -5,7 +5,7 @@
 #include <windows.h>
 #include "ButtonPosition.h"
 
-#define MEMO_MAXBUF 18
+#define MEMO_MAXBUF 17
 
 typedef struct tagPoint {
 	int x;

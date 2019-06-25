@@ -50,7 +50,7 @@ int AppendNode(ALARM **HeadNode, ALARM *NewNode) {		// Return value is the numbe
 void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodePoint) {
 	if (HeadNode != NULL) {
 		int SingleTimeDistanceH = 0;
-		int SingleTimeDistanceM = 0;
+		int SingleTimeDistanceM = -1;
 		int PrintAlarm_y = 142;
 		int PrintAlarmBorder_y = 130;
 		LPWSTR Buf_Hour = (LPWSTR)calloc(3, sizeof(wchar_t));
@@ -62,9 +62,9 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		HBRUSH SelectedBrush, OldBrush;
 
 		BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
-		TimeFont = CreateFont(25, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
-		MemoFont = CreateFont(15, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
-		RepeatFont = CreateFont(10, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+		TimeFont = CreateFont(25, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²");
+		MemoFont = CreateFont(16, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²");
+		RepeatFont = CreateFont(11, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²");
 		SelectedBrush = CreateSolidBrush(RGB(150, 200, 255));
 
 		OldPen = (HPEN)SelectObject(hdc, BorderPen);
@@ -82,21 +82,21 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			
 			if (HeadNode->time.Hou < 10) {
 				SingleTimeDistanceH = 6;
-				TextOut(hdc, 77, PrintAlarm_y, L"0", wcslen(L"0"));
+				TextOut(hdc, 76, PrintAlarm_y, L"0", wcslen(L"0"));
 			}
 			if (HeadNode->time.Min < 10) {
 				SingleTimeDistanceM = 6;
-				TextOut(hdc, 115, PrintAlarm_y, L"0", wcslen(L"0"));
+				TextOut(hdc, 114, PrintAlarm_y, L"0", wcslen(L"0"));
 			}
 			_itow(HeadNode->time.Hou, Buf_Hour, 10);
 			_itow(HeadNode->time.Min, Buf_Minu, 10);
 			SetTextAlign(hdc, TA_CENTER);
 			SelectObject(hdc, TimeFont);
-			TextOut(hdc, 90 + SingleTimeDistanceH, PrintAlarm_y, Buf_Hour, wcslen(Buf_Hour));
+			TextOut(hdc, 91 + SingleTimeDistanceH, PrintAlarm_y, Buf_Hour, wcslen(Buf_Hour));
 			TextOut(hdc, 109, PrintAlarm_y, L":", wcslen(L":"));
-			TextOut(hdc, 128 + SingleTimeDistanceM, PrintAlarm_y, Buf_Minu, wcslen(Buf_Minu));
+			TextOut(hdc, 129 + SingleTimeDistanceM, PrintAlarm_y, Buf_Minu, wcslen(Buf_Minu));
 			SingleTimeDistanceH = 0;
-			SingleTimeDistanceM = 0;
+			SingleTimeDistanceM = -1;
 
 			SetTextAlign(hdc, TA_LEFT);
 			SelectObject(hdc, MemoFont);

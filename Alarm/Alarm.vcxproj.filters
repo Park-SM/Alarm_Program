@@ -84,5 +84,11 @@
     <Image Include="DownArrow.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="ModificationMenu_Title.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="ModificationMenu_Modify.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

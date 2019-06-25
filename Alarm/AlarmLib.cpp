@@ -808,7 +808,7 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
 	HFONT Font, OldFont;
-	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, OldBit;
+	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, ModifyBit, CancelBit, OldBit;
 
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);
@@ -826,18 +826,18 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	DeleteObject(BorderPen);
 
 	MemDC = CreateCompatibleDC(hdc);
-	//TitleBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP11));
+	TitleBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP16));
 	HourBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP7));
 	MinuteBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP8));
 	RepeatWeekBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP9));
 	MemoBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP10));
-	CreateBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP12));
+	ModifyBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP17));
 	CancelBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP13));
 
-	//OldBit = (HBITMAP)SelectObject(MemDC, TitleBit);
-	//BitBlt(hdc, 10, 55, 350, 55, MemDC, 0, 0, SRCCOPY);
+	OldBit = (HBITMAP)SelectObject(MemDC, TitleBit);
+	BitBlt(hdc, 160, 55, 350, 55, MemDC, 0, 0, SRCCOPY);
 
-	OldBit = (HBITMAP)SelectObject(MemDC, HourBit);
+	SelectObject(MemDC, HourBit);
 	BitBlt(hdc, 160, 105, 350, 55, MemDC, 0, 0, SRCCOPY);
 
 	SelectObject(MemDC, MinuteBit);
@@ -849,19 +849,19 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	SelectObject(MemDC, MemoBit);
 	BitBlt(hdc, 160, 325, 350, 45, MemDC, 0, 0, SRCCOPY);
 
-	SelectObject(MemDC, CreateBit);
-	BitBlt(hdc, 315, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
+	SelectObject(MemDC, ModifyBit);
+	BitBlt(hdc, 312, 411, 77, 32, MemDC, 0, 0, SRCCOPY);
 
 	SelectObject(MemDC, CancelBit);
 	BitBlt(hdc, 400, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
 
 	SelectObject(MemDC, OldBit);
-	//DeleteObject(TitleBit);
+	DeleteObject(TitleBit);
 	DeleteObject(HourBit);
 	DeleteObject(MinuteBit);
 	DeleteObject(RepeatWeekBit);
 	DeleteObject(MemoBit);
-	DeleteObject(CreateBit);
+	DeleteObject(ModifyBit);
 	DeleteObject(CancelBit);
 	DeleteDC(MemDC);
 

@@ -140,6 +140,8 @@
     <Image Include="Delete.bmp" />
     <Image Include="DownArrow.bmp" />
     <Image Include="MainTitle.bmp" />
+    <Image Include="ModificationMenu_Modify.bmp" />
+    <Image Include="ModificationMenu_Title.bmp" />
     <Image Include="Modify.bmp" />
     <Image Include="UpArrow.bmp" />
   </ItemGroup>

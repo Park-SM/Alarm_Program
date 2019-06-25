@@ -26,6 +26,7 @@ TIME *tSelectedTime = (TIME*)calloc(1, sizeof(TIME));
 LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 RECT MemoRect = { MEB_LEFT, MEB_TOP, MEB_RIGHT, MEB_BOTTOM };
 RECT ModifyRect = { MEB_LEFT + 150, MEB_TOP, MEB_RIGHT + 150, MEB_BOTTOM };
+RECT AlarmTableRect = { ALARMTABLE_LEFT, ALARMTABLE_TOP, ALARMTABLE_RIGHT, ALARMTABLE_BOTTOM };
 int MemoDataLen = 0;
 int NumOfAlarm = 0;
 
@@ -122,6 +123,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		OnClickListener(gInstance, hWnd, CheckedType);
 		SendMessage(hWnd, WM_MOUSEMOVE, 0, 0);
 		return 0;
+
+	case WM_MOUSEWHEEL:
+		if ((SHORT)HIWORD(wParam) > 0) {
+			if (PrintNodePoint > 0) PrintNodePoint--;
+			InvalidateRect(hWnd, &AlarmTableRect, false);
+		} else {
+			if (NumOfAlarm - PrintNodePoint > 10) PrintNodePoint++;
+			InvalidateRect(hWnd, &AlarmTableRect, false);
+		}
+		break;
 
 	case WM_CHAR:
 		if (wParam == VK_BACK) {

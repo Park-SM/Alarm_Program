@@ -1,27 +1,9 @@
-﻿  AlarmLib.cpp
+﻿  WndMain.cpp
 c:\users\park sangmin\desktop\alarm_program\alarm\buttonposition.h(51): warning C4005: 'MB_RIGHT': 매크로 재정의
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winuser.h(8942): note: 'MB_RIGHT'의 이전 정의를 참조하십시오.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(85): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(89): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(95): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(96): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(97): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(103): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(111): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(112): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(113): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(114): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(115): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(116): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(117): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(802): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\alarmlib.cpp(877): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  WndMain.cpp
-c:\users\park sangmin\desktop\alarm_program\alarm\buttonposition.h(51): warning C4005: 'MB_RIGHT': 매크로 재정의
-  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winuser.h(8942): note: 'MB_RIGHT'의 이전 정의를 참조하십시오.
-c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(61): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(143): warning C4244: '=': 'WPARAM'에서 'WCHAR'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(180): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(159): warning C4101: 'hdc' :참조되지 않은 지역 변수입니다.
-  코드를 생성하고 있습니다...
+c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(65): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(147): warning C4244: '=': 'WPARAM'에서 'WCHAR'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(185): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(296): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\park sangmin\desktop\alarm_program\alarm\wndmain.cpp(378): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Alarm.vcxproj -> C:\Users\Park Sangmin\Desktop\Alarm_Program\x64\Debug\Alarm.exe

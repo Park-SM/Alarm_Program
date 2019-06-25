@@ -230,6 +230,7 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd, 
 			case 4: Rectangle(hdc, MEB_LEFT, MEB_TOP, MEB_RIGHT, MEB_BOTTOM); break;
 			case 5: Rectangle(hdc, CT_LEFT, CT_TOP, CT_RIGHT, CT_BOTTOM); break;
 			case 6: Rectangle(hdc, CL_LEFT, CL_TOP, CL_RIGHT, CL_BOTTOM); break;
+			case 7: Rectangle(hdc, BR_LEFT, BR_TOP, BR_RIGHT, BR_BOTTOM); break;
 
 			case 20: Rectangle(hdc, X0, Y0, X1, Y1); break;
 			case 21: Rectangle(hdc, X1, Y0, X2, Y1); break;
@@ -339,6 +340,7 @@ void PrintSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd, 
 			case 4: Rectangle(hdc, MEB_LEFT + 150, MEB_TOP, MEB_RIGHT + 150, MEB_BOTTOM); break;
 			case 5: Rectangle(hdc, CT_LEFT + 150, CT_TOP, CT_RIGHT + 150, CT_BOTTOM); break;
 			case 6: Rectangle(hdc, CL_LEFT + 150, CL_TOP, CL_RIGHT + 150, CL_BOTTOM); break;
+			case 7: Rectangle(hdc, BR_LEFT + 150, BR_TOP, BR_RIGHT + 150, BR_BOTTOM); break;
 
 			case 220: Rectangle(hdc, X0 + 150, Y0, X1 + 150, Y1); break;
 			case 221: Rectangle(hdc, X1 + 150, Y0, X2 + 150, Y1); break;
@@ -565,6 +567,7 @@ int CheckingMousePos(ALARM *TargetNode, TIME *tSelectedTime, int x, int y, int F
 			else if (click && x > R_X12 && x < R_X13 && y > Y9 && y < Y10) return 126;
 			else return 3; }
 		else if (x > MEB_LEFT && x < MEB_RIGHT && y > MEB_TOP && y < MEB_BOTTOM) return 4;
+		else if (x > BR_LEFT && x < BR_RIGHT && y > BR_TOP && y < BR_BOTTOM) return 7;
 		else if (x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) {
 			if (click && x > CT_LEFT && x < CT_RIGHT && y > CT_TOP && y < CT_BOTTOM) return 150;
 			else return 5; }
@@ -677,6 +680,7 @@ int CheckingMousePos(ALARM *TargetNode, TIME *tSelectedTime, int x, int y, int F
 			else if (click && x > R_X12 + 150 && x < R_X13 + 150 && y > Y9 && y < Y10) return 326;
 			else return 3;
 		} else if (x > MEB_LEFT + 150 && x < MEB_RIGHT + 150 && y > MEB_TOP && y < MEB_BOTTOM) return 4;
+		else if (x > BR_LEFT + 150 && x < BR_RIGHT + 150 && y > BR_TOP && y < BR_BOTTOM) return 7;
 		  else if (x > CT_LEFT + 150 && x < CT_RIGHT + 150 && y > CT_TOP && y < CT_BOTTOM) {
 			if (click && x > CT_LEFT + 150 && x < CT_RIGHT + 150 && y > CT_TOP && y < CT_BOTTOM) return 350;
 			else return 5;
@@ -713,6 +717,7 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd)
 		case 4: if (bPSB) { PrintSelectedButton(Instance, hWnd, 4, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 4; } return;
 		case 5: if (bPSB) { PrintSelectedButton(Instance, hWnd, 5, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 5; } return;
 		case 6: if (bPSB) { PrintSelectedButton(Instance, hWnd, 6, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 6; } return;
+		case 7: if (bPSB) { PrintSelectedButton(Instance, hWnd, 7, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 7; } return;
 		case 0: if (bPNSB) { PrintSelectedButton(Instance, hWnd, onButtonType, FocusWnd, false); bPSB = true; bPNSB = false; } return;
 		}
 	} else if (FocusWnd == 2) {
@@ -723,6 +728,7 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd)
 		case 4: if (bPSB) { PrintSelectedButton(Instance, hWnd, 4, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 4; } return;
 		case 5: if (bPSB) { PrintSelectedButton(Instance, hWnd, 5, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 5; } return;
 		case 6: if (bPSB) { PrintSelectedButton(Instance, hWnd, 6, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 6; } return;
+		case 7: if (bPSB) { PrintSelectedButton(Instance, hWnd, 7, FocusWnd, true); bPSB = false; bPNSB = true; onButtonType = 7; } return;
 		case 0: if (bPNSB) { PrintSelectedButton(Instance, hWnd, onButtonType, FocusWnd, false); bPSB = true; bPNSB = false; } return;
 		}
 	}
@@ -731,8 +737,8 @@ void UpdateSelectedButton(HINSTANCE Instance, HWND hWnd, int type, int FocusWnd)
 void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, LPWSTR MemoData, ALARM **NewNode, bool *AddMenuFirstMotion, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
-	HFONT Font, OldFont;
-	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, OldBit;
+	HFONT MemoFont, SoundPathFont, OldFont;
+	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, CreateBit, CancelBit, SoundPathBit, OldBit;
 
 	if (*NewNode == NULL) *NewNode = (ALARM*)calloc(1, sizeof(ALARM));
 
@@ -756,6 +762,7 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	MinuteBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP8));
 	RepeatWeekBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP9));
 	MemoBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP10));
+	SoundPathBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP18));
 	CreateBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP12));
 	CancelBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP13));
 
@@ -774,6 +781,9 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	SelectObject(MemDC, MemoBit);
 	BitBlt(hdc, 10, 325, 350, 45, MemDC, 0, 0, SRCCOPY);
 
+	SelectObject(MemDC, SoundPathBit);
+	BitBlt(hdc, 10, 370, 350, 45, MemDC, 0, 0, SRCCOPY);
+
 	SelectObject(MemDC, CreateBit);
 	BitBlt(hdc, 165, 410, 77, 31, MemDC, 0, 0, SRCCOPY);
 
@@ -786,6 +796,7 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	DeleteObject(MinuteBit);
 	DeleteObject(RepeatWeekBit);
 	DeleteObject(MemoBit);
+	DeleteObject(SoundPathBit);
 	DeleteObject(CreateBit);
 	DeleteObject(CancelBit);
 	DeleteDC(MemDC);
@@ -796,19 +807,22 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 		if (tSelectedTime.RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 120, *FocusWnd, true);
 	}
 
-	Font = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
-	OldFont = (HFONT)SelectObject(hdc, Font);
+	MemoFont = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	SoundPathFont = CreateFont(13, 0, 1, 0, 600, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	OldFont = (HFONT)SelectObject(hdc, MemoFont);
 	SetTextColor(hdc, RGB(37, 177, 245));
 	TextOut(hdc, MEB_LEFT + 3, MEB_TOP, MemoData, wcslen(MemoData));
+	SelectObject(hdc, SoundPathFont);
+	TextOut(hdc, BR_RIGHT + 40, BR_TOP + 10, (*NewNode)->szSoundFileName, wcslen((*NewNode)->szSoundFileName));
 	SelectObject(hdc, OldFont);
-	DeleteObject(Font);
+	DeleteObject(MemoFont);
 }
 
 void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTime, LPWSTR MemoData, ALARM *SelectedNode, bool *ModifyMenuFistMotion, int *FocusWnd) {
 	HDC MemDC;
 	HPEN BorderPen, OldPen;
-	HFONT Font, OldFont;
-	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, ModifyBit, CancelBit, OldBit;
+	HFONT MemoFont, SoundPathFont, OldFont;
+	HBITMAP TitleBit, HourBit, MinuteBit, RepeatWeekBit, MemoBit, ModifyBit, CancelBit, SoundPathBit, OldBit;
 
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);
@@ -831,6 +845,7 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	MinuteBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP8));
 	RepeatWeekBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP9));
 	MemoBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP10));
+	SoundPathBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP18));
 	ModifyBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP17));
 	CancelBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP13));
 
@@ -849,6 +864,9 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	SelectObject(MemDC, MemoBit);
 	BitBlt(hdc, 160, 325, 350, 45, MemDC, 0, 0, SRCCOPY);
 
+	SelectObject(MemDC, SoundPathBit);
+	BitBlt(hdc, 160, 370, 350, 45, MemDC, 0, 0, SRCCOPY);
+
 	SelectObject(MemDC, ModifyBit);
 	BitBlt(hdc, 312, 411, 77, 32, MemDC, 0, 0, SRCCOPY);
 
@@ -861,6 +879,7 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	DeleteObject(MinuteBit);
 	DeleteObject(RepeatWeekBit);
 	DeleteObject(MemoBit);
+	DeleteObject(SoundPathBit);
 	DeleteObject(ModifyBit);
 	DeleteObject(CancelBit);
 	DeleteDC(MemDC);
@@ -871,10 +890,13 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 		if (tSelectedTime->RepeatWeek[i] == 1) PrintSelectedButton(Instance, hWnd, i + 320, *FocusWnd, true);
 	}
 
-	Font = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
-	OldFont = (HFONT)SelectObject(hdc, Font);
+	MemoFont = CreateFont(13, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	SoundPathFont = CreateFont(13, 0, 1, 0, 600, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²Ã¼");
+	OldFont = (HFONT)SelectObject(hdc, MemoFont);
 	SetTextColor(hdc, RGB(37, 177, 245));
 	TextOut(hdc, MEB_LEFT + 3 + 150, MEB_TOP, MemoData, wcslen(MemoData));
+	SelectObject(hdc, SoundPathFont);
+	TextOut(hdc, BR_RIGHT + 40 + 150, BR_TOP + 10, SelectedNode->szSoundFileName, wcslen(SelectedNode->szSoundFileName));
 	SelectObject(hdc, OldFont);
-	DeleteObject(Font);
+	DeleteObject(MemoFont);
 }

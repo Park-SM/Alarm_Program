@@ -61,6 +61,11 @@
 #define MEB_RIGHT 317
 #define MEB_BOTTOM 353
 
+#define BR_LEFT 15
+#define BR_TOP 370
+#define BR_RIGHT 85
+#define BR_BOTTOM 400
+
 #define CT_LEFT 165
 #define CT_TOP 412
 #define CT_RIGHT 240

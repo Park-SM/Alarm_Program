@@ -22,6 +22,7 @@ typedef struct tagTime {
 typedef struct tagAlarm {
 	TIME time;
 	WCHAR szSoundFilePath[512];
+	WCHAR szSoundFileName[128];
 	LPWSTR MemoData;
 	bool OnOff;
 	bool Selected;

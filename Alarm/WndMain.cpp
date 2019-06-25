@@ -27,6 +27,10 @@ LPWSTR MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 RECT MemoRect = { MEB_LEFT, MEB_TOP, MEB_RIGHT, MEB_BOTTOM };
 RECT ModifyRect = { MEB_LEFT + 150, MEB_TOP, MEB_RIGHT + 150, MEB_BOTTOM };
 RECT AlarmTableRect = { ALARMTABLE_LEFT, ALARMTABLE_TOP, ALARMTABLE_RIGHT, ALARMTABLE_BOTTOM };
+RECT SoundPathRect_add = { BR_RIGHT + 40, BR_TOP + 10, 349, BR_BOTTOM };
+RECT SoundPathRect_modify = { BR_RIGHT + 40 + 150, BR_TOP + 10, 500, BR_BOTTOM };
+OPENFILENAME ofn;
+WCHAR szFileName[512];
 int MemoDataLen = 0;
 int NumOfAlarm = 0;
 
@@ -156,9 +160,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 }
 
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
-	HDC hdc;
-	bool IsFirstH = true;	// Using for FocusWnd2
-	bool IsFirstM = true;	// Using for FocusWnd2
+	static bool IsFirstH = true;	// Using for FocusWnd2
+	static bool IsFirstM = true;	// Using for FocusWnd2
+	static WCHAR OldFileName[100];	// Using for FocusWnd2
+	static WCHAR OldFilePath[512];	// Using for FocusWnd2
 	static int OldHourType = 0;
 	static int OldMinuteType = 0;
 
@@ -179,6 +184,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 					wcsncpy(MemoData, SelectedNode->MemoData, wcslen(SelectedNode->MemoData) + 1);
 					MemoDataLen = wcslen(SelectedNode->MemoData);
 					for (int i = 0; i < 7; i++) tSelectedTime->RepeatWeek[i] = SelectedNode->time.RepeatWeek[i];
+					wcsncpy(OldFileName, SelectedNode->szSoundFileName, wcslen(SelectedNode->szSoundFileName));
+					wcsncpy(OldFilePath, SelectedNode->szSoundFilePath, wcslen(SelectedNode->szSoundFilePath));
 					bModifyMenu = true;
 					InvalidateRect(hWnd, NULL, false);
 				}
@@ -274,6 +281,32 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			InvalidateRect(hWnd, NULL, true);
 			break;
 
+			// Button for Browse.
+		case 7:
+			memset(&ofn, 0, sizeof(OPENFILENAME));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.hwndOwner = hWnd;
+			ofn.lpstrFilter = L"All Files(*.*)\0*.*\0";
+			ofn.lpstrFile = szFileName;
+			ofn.nMaxFile = 512;
+
+			if (GetOpenFileName(&ofn))
+			{
+				int i;
+				int nlpstrFile = wcslen(ofn.lpstrFile);
+				WCHAR tChar = ofn.lpstrFile[nlpstrFile];
+
+				memset(NewNode->szSoundFileName, 0, sizeof(NewNode->szSoundFileName));
+				memset(NewNode->szSoundFilePath, 0, sizeof(NewNode->szSoundFilePath));
+				wcsncpy(NewNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
+				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
+				i += 2;
+				wcsncpy(NewNode->szSoundFileName, &ofn.lpstrFile[i], nlpstrFile - i);
+			}
+
+			InvalidateRect(hWnd, &SoundPathRect_add, false);
+			break;
+
 			// Button for Create and Cancel.
 		case 150: case 151:
 			if (type == 150) {
@@ -330,6 +363,32 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			InvalidateRect(hWnd, NULL, true);
 			break;
 
+			// Button for Browse.
+		case 7:
+			memset(&ofn, 0, sizeof(OPENFILENAME));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.hwndOwner = hWnd;
+			ofn.lpstrFilter = L"All Files(*.*)\0*.*\0";
+			ofn.lpstrFile = szFileName;
+			ofn.nMaxFile = 512;
+
+			if (GetOpenFileName(&ofn))
+			{
+				int i;
+				int nlpstrFile = wcslen(ofn.lpstrFile);
+				WCHAR tChar = ofn.lpstrFile[nlpstrFile];
+
+				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));
+				memset(SelectedNode->szSoundFilePath, 0, sizeof(SelectedNode->szSoundFilePath));
+				wcsncpy(SelectedNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
+
+				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
+				i += 2;
+				wcsncpy(SelectedNode->szSoundFileName, &ofn.lpstrFile[i], nlpstrFile - i);
+			}
+			InvalidateRect(hWnd, &SoundPathRect_modify, false);
+			break;
+
 			// Button for Modify and Cancel.
 		case 350: case 351:
 			if (type == 350) {
@@ -342,12 +401,22 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				for (int i = 0; i < 7; i++) SelectedNode->time.RepeatWeek[i] = tSelectedTime->RepeatWeek[i];
 				wcsncpy(SelectedNode->MemoData, MemoData, wcslen(MemoData) + 1);
 			}
+			else if (type == 351) {
+				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));
+				memset(SelectedNode->szSoundFilePath, 0, sizeof(SelectedNode->szSoundFilePath));
+				wcsncpy(SelectedNode->szSoundFileName, OldFileName, wcslen(OldFileName));
+				wcsncpy(SelectedNode->szSoundFilePath, OldFilePath, wcslen(OldFilePath));
+			}
 
+			IsFirstH = true;
+			IsFirstM = true;
 			FocusWnd = 0;
 			bModifyMenu = false;
 			ModifyMenuFirstMotion = true;
 			memset(tSelectedTime, 0, sizeof(TIME));
 			memset(MemoData, 0, MEMO_MAXBUF * sizeof(wchar_t));
+			memset(OldFileName, 0, sizeof(OldFileName));
+			memset(OldFilePath, 0, sizeof(OldFilePath));
 			MemoDataLen = 0;
 
 			InvalidateRect(hWnd, NULL, true);

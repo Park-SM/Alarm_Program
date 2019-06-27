@@ -129,14 +129,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_MOUSEWHEEL:
-		if ((short)HIWORD(wParam) > 0) {
-			if (PrintNodePoint > 0) PrintNodePoint--;
-			InvalidateRect(hWnd, &AlarmTableRect, false);
-		} else {
-			if (NumOfAlarm - PrintNodePoint > 10) PrintNodePoint++;
-			InvalidateRect(hWnd, &AlarmTableRect, false);
+		if (FocusWnd == 0) {
+			if ((short)HIWORD(wParam) > 0) {
+				if (PrintNodePoint > 0) PrintNodePoint--;
+				InvalidateRect(hWnd, &AlarmTableRect, false);
+			}
+			else {
+				if (NumOfAlarm - PrintNodePoint > 10) PrintNodePoint++;
+				InvalidateRect(hWnd, &AlarmTableRect, false);
+			}
 		}
-		break;
+		return 0;
 
 	case WM_CHAR:
 		if (wParam == VK_BACK) {
@@ -184,8 +187,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 					wcsncpy(MemoData, SelectedNode->MemoData, wcslen(SelectedNode->MemoData) + 1);
 					MemoDataLen = wcslen(SelectedNode->MemoData);
 					for (int i = 0; i < 7; i++) tSelectedTime->RepeatWeek[i] = SelectedNode->time.RepeatWeek[i];
-					wcsncpy(OldFileName, SelectedNode->szSoundFileName, wcslen(SelectedNode->szSoundFileName));
-					wcsncpy(OldFilePath, SelectedNode->szSoundFilePath, wcslen(SelectedNode->szSoundFilePath));
+					wcsncpy(OldFileName, SelectedNode->szSoundFileName, wcslen(SelectedNode->szSoundFileName) + 1);
+					wcsncpy(OldFilePath, SelectedNode->szSoundFilePath, wcslen(SelectedNode->szSoundFilePath) + 1);
 					bModifyMenu = true;
 					InvalidateRect(hWnd, NULL, false);
 				}
@@ -205,6 +208,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				NewNode = (ALARM*)calloc(1, sizeof(ALARM));
 				NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 				wcsncpy(NewNode->MemoData, SelectedNode->MemoData, wcslen(SelectedNode->MemoData) + 1);
+				wcsncpy(NewNode->szSoundFileName, SelectedNode->szSoundFileName, wcslen(SelectedNode->szSoundFileName) + 1);
+				wcsncpy(NewNode->szSoundFilePath, SelectedNode->szSoundFilePath, wcslen(SelectedNode->szSoundFilePath) + 1);
 				NewNode->NextAlarm = NULL;
 				NewNode->OnOff = true;
 				NewNode->Selected = false;
@@ -380,7 +385,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));
 				memset(SelectedNode->szSoundFilePath, 0, sizeof(SelectedNode->szSoundFilePath));
-				wcsncpy(SelectedNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
+				wcsncpy(SelectedNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile + 1);
 
 				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
 				i += 2;
@@ -404,8 +409,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			else if (type == 351) {
 				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));
 				memset(SelectedNode->szSoundFilePath, 0, sizeof(SelectedNode->szSoundFilePath));
-				wcsncpy(SelectedNode->szSoundFileName, OldFileName, wcslen(OldFileName));
-				wcsncpy(SelectedNode->szSoundFilePath, OldFilePath, wcslen(OldFilePath));
+				wcsncpy(SelectedNode->szSoundFileName, OldFileName, wcslen(OldFileName) + 1);
+				wcsncpy(SelectedNode->szSoundFilePath, OldFilePath, wcslen(OldFilePath) + 1);
 			}
 
 			IsFirstH = true;

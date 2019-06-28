@@ -318,7 +318,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				CreateAlarm(tSelectedTime, MemoData, NewNode);
 				NumOfAlarm = AppendNode(&HeadNode, NewNode);
 				if (NumOfAlarm > 10) PrintNodePoint++;
-				//AlarmFileWriter(NewNode);
+				AlarmFileWriter(NewNode);
 				NewNode = NULL;
 			}
 			else if (type == 151) {

@@ -90,6 +90,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc);
+		AlarmFileReader(hWnd, &HeadNode, &NumOfAlarm, L"");
 
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMaxTrackSize.x = 500;
@@ -206,7 +207,6 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			while (SelectedNode != NULL && SelectedNode->Selected != true) SelectedNode = SelectedNode->NextAlarm;
 			if (SelectedNode != NULL) {
 				NewNode = (ALARM*)calloc(1, sizeof(ALARM));
-				NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
 				wcsncpy(NewNode->MemoData, SelectedNode->MemoData, wcslen(SelectedNode->MemoData) + 1);
 				wcsncpy(NewNode->szSoundFileName, SelectedNode->szSoundFileName, wcslen(SelectedNode->szSoundFileName) + 1);
 				wcsncpy(NewNode->szSoundFilePath, SelectedNode->szSoundFilePath, wcslen(SelectedNode->szSoundFilePath) + 1);
@@ -318,6 +318,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				CreateAlarm(tSelectedTime, MemoData, NewNode);
 				NumOfAlarm = AppendNode(&HeadNode, NewNode);
 				if (NumOfAlarm > 10) PrintNodePoint++;
+				//AlarmFileWriter(NewNode);
 				NewNode = NULL;
 			}
 			else if (type == 151) {

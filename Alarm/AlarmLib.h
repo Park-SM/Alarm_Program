@@ -23,7 +23,7 @@ typedef struct tagAlarm {
 	TIME time;
 	WCHAR szSoundFilePath[512];
 	WCHAR szSoundFileName[128];
-	LPWSTR MemoData;
+	WCHAR MemoData[MEMO_MAXBUF + 1];
 	bool OnOff;
 	bool Selected;
 	struct tagAlarm *NextAlarm;
@@ -32,6 +32,8 @@ typedef struct tagAlarm {
 static bool bPSB = true, bPNSB = false;		// Print Selected Button, Print No Selected Button.
 
 void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode);
+void AlarmFileReader(HWND hWnd, ALARM **HeadNode, int *uNumOfAlarm, LPCWCHAR FilePath);
+void AlarmFileWriter(ALARM *NewNode);
 void DeleteAlarm(ALARM **HeadNode, int *NumOfAlarm);
 int AppendNode(ALARM **HeadNode, ALARM *NewNode);
 void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodePoint);

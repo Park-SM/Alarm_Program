@@ -1,15 +1,39 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <locale.h>
 #include "AlarmLib.h"
 #include "resource.h"
 
 void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode) {
 	for (int i = 0; i < 7; i++) NewNode->time.RepeatWeek[i] = nSelectedTime->RepeatWeek[i];
-	NewNode->MemoData = (LPWSTR)calloc(MEMO_MAXBUF, sizeof(wchar_t));
+	memset(NewNode->MemoData, 0, MEMO_MAXBUF);
 	wcsncpy(NewNode->MemoData, nMemoData, wcslen(nMemoData) + 1);
-	//wcsncpy((*NewNode)->szSoundFilePath, lpSoundFilePath, wcslen((*NewNode)->szSoundFilePath) + 1);
 	NewNode->NextAlarm = NULL;
 	NewNode->OnOff = true;
 	NewNode->Selected = false;
+}
+
+// The difference between C's feof() and Pascal's eof().
+// Pascal's function returns true if the next read will fail because of end of file. C's function returns true if the last function failed
+void AlarmFileReader(HWND hWnd, ALARM **HeadNode, int *uNumOfAlarm, LPCWCHAR FilePath) {
+	ALARM *CurrentA = NULL;
+	FILE *hDataFile = fopen("AlarmData.txt", "rt");
+	_wsetlocale(LC_ALL, L"korean");
+	if (hDataFile != NULL) {
+		while (!feof(hDataFile)) {
+			CurrentA = (ALARM*)calloc(1, sizeof(ALARM));
+			fwscanf(hDataFile, L"%d %d %d %d %d %d %d %d %d %d %ws %ws %ws %d %d", &CurrentA->time.Hou, &CurrentA->time.Min, &CurrentA->time.Sec, &CurrentA->time.RepeatWeek[0], &CurrentA->time.RepeatWeek[1], &CurrentA->time.RepeatWeek[2], &CurrentA->time.RepeatWeek[3], &CurrentA->time.RepeatWeek[4], &CurrentA->time.RepeatWeek[5], &CurrentA->time.RepeatWeek[6], CurrentA->szSoundFileName, CurrentA->szSoundFilePath, CurrentA->MemoData, &CurrentA->OnOff, &CurrentA->Selected);
+			*uNumOfAlarm = AppendNode(HeadNode, CurrentA);
+		}
+		fclose(hDataFile);
+	} else MessageBox(hWnd, L"There is no data..", L"Park.", MB_OK);
+}
+
+void AlarmFileWriter(ALARM *NewNode) {
+	FILE *hDataFile = fopen("AlarmData.txt", "at+");
+	if (hDataFile != NULL) {
+		fwprintf(hDataFile, L"\n%d %d %d %d %d %d %d %d %d %d %ws %ws %ws %d %d", NewNode->time.Hou, NewNode->time.Min, NewNode->time.Sec, NewNode->time.RepeatWeek[0], NewNode->time.RepeatWeek[1], NewNode->time.RepeatWeek[2], NewNode->time.RepeatWeek[3], NewNode->time.RepeatWeek[4], NewNode->time.RepeatWeek[5], NewNode->time.RepeatWeek[6], NewNode->szSoundFileName, NewNode->szSoundFileName, NewNode->OnOff, NewNode->Selected, NewNode->NextAlarm);
+		fclose(hDataFile);
+	}
 }
 
 void DeleteAlarm(ALARM **HeadNode, int *NumOfAlarm) {
@@ -80,6 +104,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			} else SetBkColor(hdc, RGB(150, 200, 255));
 			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
 			
+			
 			if (HeadNode->time.Hou < 10) {
 				SingleTimeDistanceH = 6;
 				TextOut(hdc, 76, PrintAlarm_y, L"0", wcslen(L"0"));
@@ -101,7 +126,6 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 			SetTextAlign(hdc, TA_LEFT);
 			SelectObject(hdc, MemoFont);
 			TextOut(hdc, 155, PrintAlarm_y, HeadNode->MemoData, wcslen(HeadNode->MemoData));
-
 			SelectObject(hdc, RepeatFont);
 			int count = 0;
 			for (int i = 0; i < 7; i++) {

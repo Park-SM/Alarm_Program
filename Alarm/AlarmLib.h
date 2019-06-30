@@ -33,7 +33,7 @@ static bool bPSB = true, bPNSB = false;		// Print Selected Button, Print No Sele
 
 void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode);
 void AlarmFileReader(HWND hWnd, ALARM **HeadNode, int *uNumOfAlarm, LPCWCHAR FilePath);
-void AlarmFileWriter(ALARM *NewNode);
+void AlarmFileWriter(ALARM *HeadNode);
 void DeleteAlarm(ALARM **HeadNode, int *NumOfAlarm);
 int AppendNode(ALARM **HeadNode, ALARM *NewNode);
 void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodePoint);

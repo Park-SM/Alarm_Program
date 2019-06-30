@@ -318,7 +318,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				CreateAlarm(tSelectedTime, MemoData, NewNode);
 				NumOfAlarm = AppendNode(&HeadNode, NewNode);
 				if (NumOfAlarm > 10) PrintNodePoint++;
-				AlarmFileWriter(NewNode);
+				AlarmFileWriter(HeadNode);
 				NewNode = NULL;
 			}
 			else if (type == 151) {
@@ -406,6 +406,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				for (int i = 0; i < 7; i++) SelectedNode->time.RepeatWeek[i] = tSelectedTime->RepeatWeek[i];
 				wcsncpy(SelectedNode->MemoData, MemoData, wcslen(MemoData) + 1);
+				AlarmFileWriter(HeadNode);
 			}
 			else if (type == 351) {
 				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));

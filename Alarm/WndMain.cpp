@@ -90,7 +90,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc);
-		AlarmFileReader(hWnd, &HeadNode, &NumOfAlarm, L"");
+		AlarmFileReader(&HeadNode, &NumOfAlarm);
 
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMaxTrackSize.x = 500;
@@ -307,6 +307,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
 				i += 2;
 				wcsncpy(NewNode->szSoundFileName, &ofn.lpstrFile[i], nlpstrFile - i);
+				
 			}
 
 			InvalidateRect(hWnd, &SoundPathRect_add, false);

@@ -32,7 +32,7 @@ typedef struct tagAlarm {
 static bool bPSB = true, bPNSB = false;		// Print Selected Button, Print No Selected Button.
 
 void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode);
-void AlarmFileReader(HWND hWnd, ALARM **HeadNode, int *uNumOfAlarm, LPCWCHAR FilePath);
+void AlarmFileReader(ALARM **HeadNode, int *uNumOfAlarm);
 void AlarmFileWriter(ALARM *HeadNode);
 void DeleteAlarm(ALARM **HeadNode, int *NumOfAlarm);
 int AppendNode(ALARM **HeadNode, ALARM *NewNode);

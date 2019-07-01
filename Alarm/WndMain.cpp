@@ -7,9 +7,13 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
 
+HWND ghWnd = NULL;
 HINSTANCE gInstance;
+WNDCLASS WndClass;
 LPCWSTR lpszClassN = L"Park Alarm";
 uPOINT mainCursor;
+bool ExistWindows = true;
+bool ExistMainTimer = false;
 
 int FocusWnd = 0;
 bool bAddMenu = false;
@@ -34,11 +38,10 @@ WCHAR szFileName[512];
 int MemoDataLen = 0;
 int NumOfAlarm = 0;
 
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow) {
 	HWND hWnd;
 	MSG Msg;
-	WNDCLASS WndClass;
+	bool bRet;
 	gInstance = hInstance;
 
 	WndClass.cbClsExtra = 0;
@@ -53,15 +56,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	hWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME,	//  | WS_SYSMENU | WS_CAPTION
+	hWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME | WS_SYSMENU | WS_CAPTION,	//  | WS_SYSMENU | WS_CAPTION
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
 
-	while (GetMessage(&Msg, 0, 0, 0)) {
-		TranslateMessage(&Msg);
-		DispatchMessage(&Msg);
+	while (bRet = GetMessage(&Msg, 0, 0, 0)) {
+		if (bRet != -1) {
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+		}
 	}
+
 	return Msg.wParam;
 }
 
@@ -74,7 +80,13 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 		while (Current != NULL) {
 			if (Current->OnOff && Current->time.RepeatWeek[CurrentTime.tm_wday] && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
 				Current->OnOff = false;
+				if (!ExistWindows) {
+					ShowWindow(ghWnd, SW_SHOWNORMAL);
+					hWnd = ghWnd;
+					ExistWindows = true;
+				}
 				MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK);
+				AlarmFileWriter(HeadNode);
 			}
 
 			Current = Current->NextAlarm;
@@ -89,6 +101,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage) {
 
 	case WM_CREATE:
+		//if (!ExistMainTimer) { SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc); ExistMainTimer = true; }
 		SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc);
 		AlarmFileReader(&HeadNode, &NumOfAlarm);
 
@@ -156,8 +169,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_DESTROY:
-		KillTimer(hWnd, 1);
-		PostQuitMessage(0);
+		//KillTimer(hWnd, 1);
+		//PostQuitMessage(0);
+		DestroyWindow(hWnd);
+		DestroyList(&HeadNode, &NumOfAlarm);
+		ExistWindows = false;
+		ghWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME | WS_SYSMENU | WS_CAPTION,	//  | WS_SYSMENU | WS_CAPTION
+			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+			NULL, (HMENU)NULL, gInstance, NULL);
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));

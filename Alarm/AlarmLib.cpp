@@ -79,6 +79,19 @@ void DeleteAlarm(ALARM **HeadNode, int *NumOfAlarm) {
 	}
 }
 
+void DestroyList_in(ALARM *Delete) {
+	if (Delete->NextAlarm != NULL) DestroyList_in(Delete->NextAlarm);
+	free(Delete);
+}
+
+void DestroyList(ALARM **HeadNode, int *NumOfAlarm) {
+	if (*HeadNode != NULL) {
+		DestroyList_in(*HeadNode);
+		*HeadNode = NULL;
+		*NumOfAlarm = 0;
+	}
+}
+
 int AppendNode(ALARM **HeadNode, ALARM *NewNode) {		// Return value is the number of Node.
 	int count = 0;
 	if (*HeadNode == NULL) {

@@ -304,13 +304,6 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				memset(NewNode->szSoundFileName, 0, sizeof(NewNode->szSoundFileName));
 				memset(NewNode->szSoundFilePath, 0, sizeof(NewNode->szSoundFilePath));
-				for (int j = 0; j < nlpstrFile; j++) {
-					if (ofn.lpstrFile[j] == ' ') {
-						MessageBox(hWnd, L" 선택하신 파일경로에 공백이 있어 해당 파일을 선택하실 수 없습니다.\n 공백이 없는 경로에 있는 파일을 선택해주세요.", L"Park.", MB_OK);
-						InvalidateRect(hWnd, &SoundPathRect_add, false);
-						return;
-					}
-				}
 				wcsncpy(NewNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
 				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
 				i += 2;
@@ -395,13 +388,6 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));
 				memset(SelectedNode->szSoundFilePath, 0, sizeof(SelectedNode->szSoundFilePath));
-				for (int j = 0; j < nlpstrFile; j++) {
-					if (ofn.lpstrFile[j] == ' ') {
-						MessageBox(hWnd, L" 선택하신 파일경로에 공백이 있어 해당 파일을 선택하실 수 없습니다.\n 공백이 없는 경로에 있는 파일을 선택해주세요.", L"Park.", MB_OK);
-						InvalidateRect(hWnd, &SoundPathRect_add, false);
-						return;
-					}
-				}
 				wcsncpy(SelectedNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile + 1);
 				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
 				i += 2;

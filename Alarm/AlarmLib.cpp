@@ -16,16 +16,23 @@ void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode) {
 // Pascal's function returns true if the next read will fail because of end of file. C's function returns true if the last function failed
 void AlarmFileReader(ALARM **HeadNode, int *uNumOfAlarm) {
 	ALARM *NewNode = NULL;
-	FILE *hDataFile = fopen("C:/Alarm_Program/Alarm/AlarmData.txt", "rt");
+	FILE *hDataFile = fopen("C:\\Program Files\\ParkAlarm\\AlarmData.txt", "rt");
 	_wsetlocale(LC_ALL, L"korean");
 	if (hDataFile != NULL) {
 		while (1) {
 			NewNode = (ALARM*)calloc(1, sizeof(ALARM));
-			fwscanf(hDataFile, L"\n%d %d %d %d %d %d %d %d %d %d %ws %ws %ws %d", &NewNode->time.Hou, &NewNode->time.Min, &NewNode->time.Sec, &NewNode->time.RepeatWeek[0], &NewNode->time.RepeatWeek[1], &NewNode->time.RepeatWeek[2], &NewNode->time.RepeatWeek[3], &NewNode->time.RepeatWeek[4], &NewNode->time.RepeatWeek[5], &NewNode->time.RepeatWeek[6], NewNode->szSoundFileName, NewNode->szSoundFilePath, NewNode->MemoData, &NewNode->OnOff);
+			fwscanf(hDataFile, L"%d %d %d %d %d %d %d %d %d %d %d\n", &NewNode->time.Hou, &NewNode->time.Min, &NewNode->time.Sec, &NewNode->time.RepeatWeek[0], &NewNode->time.RepeatWeek[1], &NewNode->time.RepeatWeek[2], &NewNode->time.RepeatWeek[3], &NewNode->time.RepeatWeek[4], &NewNode->time.RepeatWeek[5], &NewNode->time.RepeatWeek[6], &NewNode->OnOff);
+			fgetws(NewNode->szSoundFileName, 512, hDataFile);
+			fgetws(NewNode->szSoundFilePath, 128, hDataFile);
+			fgetws(NewNode->MemoData, MEMO_MAXBUF + 1, hDataFile);
+			NewNode->szSoundFileName[wcslen(NewNode->szSoundFileName) - 1] = NULL;	// Delete CL/LF charactor.
+			NewNode->szSoundFilePath[wcslen(NewNode->szSoundFilePath) - 1] = NULL;	// Delete CL/LF charactor.
+			NewNode->MemoData[wcslen(NewNode->MemoData) - 1] = NULL;				// Delete CL/LF charactor.
 			if (feof(hDataFile)) { free(NewNode); break; }
 			if (wcsncmp(NewNode->szSoundFileName, L"$", wcslen(L"$")) == 0) memset(NewNode->szSoundFileName, 0, 1);
 			if (wcsncmp(NewNode->szSoundFilePath, L"$", wcslen(L"$")) == 0) memset(NewNode->szSoundFilePath, 0, 1);
 			if (wcsncmp(NewNode->MemoData, L"$", wcslen(L"$")) == 0) memset(NewNode->MemoData, 0, 1);
+
 			*uNumOfAlarm = AppendNode(HeadNode, NewNode);
 		}
 		fclose(hDataFile);
@@ -33,17 +40,20 @@ void AlarmFileReader(ALARM **HeadNode, int *uNumOfAlarm) {
 }
 
 void AlarmFileWriter(ALARM *HeadNode) {
-	FILE *hDataFile = fopen("C:/Alarm_Program/Alarm/AlarmData.txt", "wt");
+	FILE *hDataFile = fopen("C:\\Program Files\\ParkAlarm\\AlarmData.txt", "wt");
 	_wsetlocale(LC_ALL, L"korean");
 	if (hDataFile != NULL) {
 		while (HeadNode != NULL) {
 			if (HeadNode->szSoundFileName[0] == NULL) wcsncpy(HeadNode->szSoundFileName, L"$", wcslen(L"$"));
 			if (HeadNode->szSoundFilePath[0] == NULL) wcsncpy(HeadNode->szSoundFilePath, L"$", wcslen(L"$"));
 			if (HeadNode->MemoData[0] == NULL) wcsncpy(HeadNode->MemoData, L"$", wcslen(L"$"));
-			fwprintf(hDataFile, L"%d %d %d %d %d %d %d %d %d %d %ws %ws %ws %d\n", HeadNode->time.Hou, HeadNode->time.Min, HeadNode->time.Sec, HeadNode->time.RepeatWeek[0], HeadNode->time.RepeatWeek[1], HeadNode->time.RepeatWeek[2], HeadNode->time.RepeatWeek[3], HeadNode->time.RepeatWeek[4], HeadNode->time.RepeatWeek[5], HeadNode->time.RepeatWeek[6], HeadNode->szSoundFileName, HeadNode->szSoundFilePath, HeadNode->MemoData, HeadNode->OnOff);
-			if (wcsncmp(HeadNode->szSoundFileName, L"$", wcslen(L"$")) == 0) memset(HeadNode->szSoundFileName, 0x00, 1);
-			if (wcsncmp(HeadNode->szSoundFilePath, L"$", wcslen(L"$")) == 0) memset(HeadNode->szSoundFilePath, 0x00, 1);
-			if (wcsncmp(HeadNode->MemoData, L"$", wcslen(L"$")) == 0) memset(HeadNode->MemoData, 0x00, 1);
+			fwprintf(hDataFile, L"\n%d %d %d %d %d %d %d %d %d %d %d\n", HeadNode->time.Hou, HeadNode->time.Min, HeadNode->time.Sec, HeadNode->time.RepeatWeek[0], HeadNode->time.RepeatWeek[1], HeadNode->time.RepeatWeek[2], HeadNode->time.RepeatWeek[3], HeadNode->time.RepeatWeek[4], HeadNode->time.RepeatWeek[5], HeadNode->time.RepeatWeek[6], HeadNode->OnOff);
+			fputws(HeadNode->szSoundFileName, hDataFile); fputws(L"\n", hDataFile);
+			fputws(HeadNode->szSoundFilePath, hDataFile); fputws(L"\n", hDataFile);
+			fputws(HeadNode->MemoData, hDataFile); fputws(L"\n", hDataFile);
+			if (wcsncmp(HeadNode->szSoundFileName, L"$", wcslen(L"$")) == 0) memset(HeadNode->szSoundFileName, 0x00, 2);
+			if (wcsncmp(HeadNode->szSoundFilePath, L"$", wcslen(L"$")) == 0) memset(HeadNode->szSoundFilePath, 0x00, 2);
+			if (wcsncmp(HeadNode->MemoData, L"$", wcslen(L"$")) == 0) memset(HeadNode->MemoData, 0x00, 2);
 			HeadNode = HeadNode->NextAlarm;
 		}
 		fclose(hDataFile);

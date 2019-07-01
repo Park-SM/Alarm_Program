@@ -1,0 +1,2 @@
+21 56 0 0 0 0 0 0 1 1 메인색상.JPG C:\Alarm_Program\메인색상.JPG 123123 1
+15 15 0 0 1 0 1 0 1 0 AlarmData.txt D:\AlarmData.txt ParkSangMIn 1

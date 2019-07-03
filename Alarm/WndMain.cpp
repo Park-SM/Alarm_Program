@@ -90,10 +90,13 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 					ExistWindows = true;
 				}
 				memset(mciString, 0x00, 512);
-				wcsncpy(mciString, L"play ", wcslen(L"play "));
+				wcsncpy(mciString, L"open ", wcslen(L"open "));
 				wcsncat(mciString, Current->szSoundFilePath, wcslen(Current->szSoundFilePath));
+				wcsncat(mciString, L" alias mp wait", wcslen(L" alias mp wait"));
 				mciSendStringW(mciString, NULL, 0, NULL);
+				mciSendStringW(L"play mp", NULL, 0, NULL);
 				MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK);
+				mciSendStringW(L"stop mp", NULL, 0, NULL);
 				AlarmFileWriter(HeadNode);
 			}
 
@@ -331,7 +334,9 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				memset(NewNode->szSoundFileName, 0, sizeof(NewNode->szSoundFileName));
 				memset(NewNode->szSoundFilePath, 0, sizeof(NewNode->szSoundFilePath));
-				wcsncpy(NewNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
+				wcsncpy(NewNode->szSoundFilePath, L"\"", wcslen(L"\""));
+				wcsncat(NewNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
+				wcsncat(NewNode->szSoundFilePath, L"\"", wcslen(L"\""));
 				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
 				i += 2;
 				wcsncpy(NewNode->szSoundFileName, &ofn.lpstrFile[i], nlpstrFile - i);
@@ -434,6 +439,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				for (int i = 0; i < 7; i++) SelectedNode->time.RepeatWeek[i] = tSelectedTime->RepeatWeek[i];
 				wcsncpy(SelectedNode->MemoData, MemoData, wcslen(MemoData) + 1);
+				SelectedNode->OnOff = true;
 				AlarmFileWriter(HeadNode);
 			}
 			else if (type == 351) {

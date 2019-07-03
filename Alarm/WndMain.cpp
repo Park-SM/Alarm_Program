@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "AlarmLib.h"
+#pragma comment(lib, "Winmm.lib")
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
@@ -61,10 +62,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
 
+	// If there is a error, GetMessage's return value is -1. For example,
+	// the function fails if hWnd is an invailed windows handle or lpmsg is an invalied pointer.
 	while (bRet = GetMessage(&Msg, 0, 0, 0)) {
 		if (bRet != -1) {
 			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
+			DispatchMessage(&Msg);	
 		}
 	}
 
@@ -73,6 +76,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 
 void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 	if (HeadNode != NULL) {
+		WCHAR mciString[512];
 		ALARM *Current = HeadNode;
 		time_t t = time(NULL);
 		struct tm CurrentTime = *localtime(&t);
@@ -85,6 +89,10 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 					hWnd = ghWnd;
 					ExistWindows = true;
 				}
+				memset(mciString, 0x00, 512);
+				wcsncpy(mciString, L"play ", wcslen(L"play "));
+				wcsncat(mciString, Current->szSoundFilePath, wcslen(Current->szSoundFilePath));
+				mciSendStringW(mciString, NULL, 0, NULL);
 				MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK);
 				AlarmFileWriter(HeadNode);
 			}

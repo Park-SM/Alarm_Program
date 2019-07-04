@@ -1,10 +1,22 @@
-﻿  WndMain.cpp
+﻿  AlarmLib.cpp
 c:\alarm_program\alarm\buttonposition.h(51): warning C4005: 'MB_RIGHT': 매크로 재정의
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winuser.h(8942): note: 'MB_RIGHT'의 이전 정의를 참조하십시오.
-c:\alarm_program\alarm\wndmain.cpp(68): warning C4806: '!=': 안전하지 않은 연산입니다. 'bool' 형식의 값('int' 형식으로 확장)이 주어진 상수와 같을 수 없습니다.
-c:\alarm_program\alarm\wndmain.cpp(74): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\alarm_program\alarm\wndmain.cpp(176): warning C4244: '=': 'WPARAM'에서 'WCHAR'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\alarm_program\alarm\wndmain.cpp(220): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\alarm_program\alarm\wndmain.cpp(333): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\alarm_program\alarm\wndmain.cpp(419): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(24): warning C4477: 'fwscanf' : 서식 문자열 '%d'에 'int *' 형식의 인수가 필요하지만 variadic 인수 11의 형식이 'bool *'입니다.
+c:\alarm_program\alarm\alarmlib.cpp(147): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(151): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(157): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(158): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(159): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(165): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(172): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(173): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(174): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(175): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(176): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(177): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(178): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(875): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(877): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(958): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\alarm_program\alarm\alarmlib.cpp(960): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Alarm.vcxproj -> C:\Alarm_Program\x64\Debug\Alarm.exe

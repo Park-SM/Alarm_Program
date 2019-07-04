@@ -84,7 +84,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 		while (Current != NULL) {
 			if (Current->OnOff && Current->time.RepeatWeek[CurrentTime.tm_wday] && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
 				Current->OnOff = false;
-				if (!ExistWindows) {
+				if (!ExistWindows) {	// Wake up window if destroied window.
 					ShowWindow(ghWnd, SW_SHOWNORMAL);
 					hWnd = ghWnd;
 					ExistWindows = true;
@@ -92,11 +92,10 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 				memset(mciString, 0x00, 512);
 				wcsncpy(mciString, L"open ", wcslen(L"open "));
 				wcsncat(mciString, Current->szSoundFilePath, wcslen(Current->szSoundFilePath));
-				wcsncat(mciString, L" alias mp wait", wcslen(L" alias mp wait"));
+				wcsncat(mciString, L" alias mp", wcslen(L" alias mp"));
 				mciSendStringW(mciString, NULL, 0, NULL);
 				mciSendStringW(L"play mp", NULL, 0, NULL);
-				MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK);
-				mciSendStringW(L"stop mp", NULL, 0, NULL);
+				if (MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK) == IDOK) mciSendStringW(L"close mp", NULL, 0, NULL);
 				AlarmFileWriter(HeadNode);
 			}
 
@@ -420,7 +419,9 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 
 				memset(SelectedNode->szSoundFileName, 0, sizeof(SelectedNode->szSoundFileName));
 				memset(SelectedNode->szSoundFilePath, 0, sizeof(SelectedNode->szSoundFilePath));
-				wcsncpy(SelectedNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile + 1);
+				wcsncpy(SelectedNode->szSoundFilePath, L"\"", wcslen(L"\""));
+				wcsncat(SelectedNode->szSoundFilePath, ofn.lpstrFile, nlpstrFile);
+				wcsncat(SelectedNode->szSoundFilePath, L"\"", wcslen(L"\""));
 				for (i = nlpstrFile; tChar != '\\' && i >= 0; i--) tChar = ofn.lpstrFile[i];
 				i += 2;
 				wcsncpy(SelectedNode->szSoundFileName, &ofn.lpstrFile[i], nlpstrFile - i);
@@ -431,7 +432,8 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			// Button for Modify and Cancel.
 		case 350: case 351:
 			if (type == 350) {
-				if (tSelectedTime->Hou != 0) SelectedNode->time.Hou = tSelectedTime->Hou - 219;
+				if (tSelectedTime->Hou == 243) SelectedNode->time.Hou = 0;
+				else if (tSelectedTime->Hou != 0) SelectedNode->time.Hou = tSelectedTime->Hou - 219;
 				else SelectedNode->time.Hou = 0;
 				
 				if (tSelectedTime->Min != 0) SelectedNode->time.Min = tSelectedTime->Min - 250;

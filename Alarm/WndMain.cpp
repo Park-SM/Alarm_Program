@@ -96,6 +96,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 				mciSendStringW(mciString, NULL, 0, NULL);
 				mciSendStringW(L"play mp", NULL, 0, NULL);
 				if (MessageBox(hWnd, Current->MemoData, L"Park Alarm.", MB_OK) == IDOK) mciSendStringW(L"close mp", NULL, 0, NULL);
+				InvalidateRect(hWnd, NULL, true);
 				AlarmFileWriter(HeadNode);
 			}
 
@@ -111,7 +112,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage) {
 
 	case WM_CREATE:
-		//if (!ExistMainTimer) { SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc); ExistMainTimer = true; }
 		SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc);
 		AlarmFileReader(&HeadNode, &NumOfAlarm);
 
@@ -199,6 +199,7 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 	static WCHAR OldFilePath[512];	// Using for FocusWnd2
 	static int OldHourType = 0;
 	static int OldMinuteType = 0;
+	static ALARM *OldSelected = NULL;
 
 	if (FocusWnd == 0) {
 		switch (type) {
@@ -270,23 +271,48 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 		case 7:
 			int i = 0;
 			ALARM *Current = NULL;
-			for (Current = HeadNode; Current != NULL; Current = Current->NextAlarm)
-				if (Current->Selected) Current->Selected = false;
+			if (mainCursor.x > ONOFFBUTTON_LEFT && mainCursor.x < ONOFFBUTTON_RIGHT) {
+				Current = HeadNode;
+				for (int t = 0; t < PrintNodePoint; t++) Current = Current->NextAlarm;
+				for (; Current != NULL && (i < 10); Current = Current->NextAlarm) {
+					if (mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) {
+						if (Current->OnOff) Current->OnOff = false;
+						else Current->OnOff = true;
+					}
+				}
+			} else {
+				Current = HeadNode;
+				for (int t = 0; t < PrintNodePoint; t++) Current = Current->NextAlarm;
+				for (; Current != NULL && (i < 10); Current = Current->NextAlarm) {
+					if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) {
+						if (Current->Selected && Current == OldSelected) {
+							Current->Selected = false;
+							InvalidateRect(hWnd, &AlarmTableRect, false);
+							return;
+						}
+						else break;
+					}
+				}
 
-			Current = HeadNode;
-			for (int t = 0; t < PrintNodePoint; t++) Current = Current->NextAlarm;
+				for (Current = HeadNode; Current != NULL; Current = Current->NextAlarm)
+					if (Current->Selected) Current->Selected = false;
 
-			for (; Current != NULL && (i < 10); Current = Current->NextAlarm) {
-				if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) {
-					Current->Selected = true;
-					break;
+				i = 0;
+				Current = HeadNode;
+				for (int t = 0; t < PrintNodePoint; t++) Current = Current->NextAlarm;
+				for (; Current != NULL && (i < 10); Current = Current->NextAlarm) {
+					if (mainCursor.x > ALARMTABLE_LEFT && mainCursor.x < ALARMTABLE_RIGHT && mainCursor.y > ALARMTABLE_TOP + (i * 49) && mainCursor.y < ALARMTABLE_TOP + (++i * 49)) {
+						Current->Selected = true;
+						OldSelected = Current;
+						break;
+					}
 				}
 			}
+			AlarmFileWriter(HeadNode);
 			InvalidateRect(hWnd, &AlarmTableRect, false);
 			break;
 		}
-	}
-	else if (FocusWnd == 1) {
+	} else if (FocusWnd == 1) {
 		switch (type) {
 			// Hour
 		case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:

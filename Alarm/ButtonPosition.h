@@ -38,6 +38,9 @@
 #define ALARMTABLE_RIGHT 442
 #define ALARMTABLE_BOTTOM 620
 
+#define ONOFFBUTTON_LEFT 37
+#define ONOFFBUTTON_RIGHT 64
+
 /*
 //	Add-menu's selected button position.
 */

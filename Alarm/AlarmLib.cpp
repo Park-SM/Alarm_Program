@@ -117,7 +117,7 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		LPWSTR Buf_Hour = (LPWSTR)calloc(3, sizeof(wchar_t));
 		LPWSTR Buf_Minu = (LPWSTR)calloc(3, sizeof(wchar_t));
 		HDC MemDC;
-		HBITMAP UpBit, DownBit, OldBit;
+		HBITMAP OnBit, OffBit, UpBit, DownBit, OldBit;
 		HPEN BorderPen, OldPen;
 		HFONT TimeFont, MemoFont, RepeatFont, OldFont;
 		HBRUSH SelectedBrush, OldBrush;
@@ -128,8 +128,13 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		RepeatFont = CreateFont(11, 0, 1, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 0, 0, 0, 0, L"±¼¸²");
 		SelectedBrush = CreateSolidBrush(RGB(150, 200, 255));
 
+		MemDC = CreateCompatibleDC(hdc);
+		OnBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP19));
+		OffBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP20));
+
 		OldPen = (HPEN)SelectObject(hdc, BorderPen);
 		OldFont = (HFONT)SelectObject(hdc, TimeFont);
+		OldBit = (HBITMAP)SelectObject(MemDC, OnBit);
 
 		SetTextColor(hdc, RGB(37, 177, 245));
 		for (int i = 0; i < PrintNodePoint; i++) HeadNode = HeadNode->NextAlarm;
@@ -139,8 +144,11 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 				SelectObject(hdc, OldBrush);
 				SetBkColor(hdc, RGB(255, 255, 255));
 			} else SetBkColor(hdc, RGB(150, 200, 255));
-			Rectangle(hdc, 40, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
+			Rectangle(hdc, 65, PrintAlarmBorder_y, 442, PrintAlarmBorder_y + 50);
 			
+			if (HeadNode->OnOff) SelectObject(MemDC, OnBit);
+			else SelectObject(MemDC, OffBit);
+			BitBlt(hdc, 37, PrintAlarmBorder_y + 12, 35, 35, MemDC, 0 , 0, SRCCOPY);
 			
 			if (HeadNode->time.Hou < 10) {
 				SingleTimeDistanceH = 6;
@@ -194,11 +202,11 @@ void PrintAlarmList(ALARM *HeadNode, HINSTANCE Instance, HDC hdc, int PrintNodeP
 		SelectObject(hdc, OldFont);
 		SelectObject(hdc, OldPen);
 
-		MemDC = CreateCompatibleDC(hdc);
+		
 		UpBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP14));
 		DownBit = LoadBitmap(Instance, MAKEINTRESOURCE(IDB_BITMAP15));
 
-		OldBit = (HBITMAP)SelectObject(MemDC, UpBit);
+		SelectObject(MemDC, UpBit);
 		BitBlt(hdc, 442, 130, 19, 17, MemDC, 0, 0, SRCCOPY);
 
 		SelectObject(MemDC, DownBit);

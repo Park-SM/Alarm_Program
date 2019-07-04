@@ -12,6 +12,50 @@ void CreateAlarm(TIME *nSelectedTime, LPWSTR nMemoData, ALARM *NewNode) {
 	NewNode->Selected = false;
 }
 
+// Shift up the selected alarm if the return value is 1
+// or shift down the selected alarm if the return value is -1.
+void ShiftNode(ALARM **HeadNode, ALARM *SelectedNode, int mode) {
+	if (*HeadNode != NULL) {
+		if (*HeadNode == SelectedNode && (*HeadNode)->NextAlarm != NULL) {
+			if (mode < 0) {
+				ALARM *TempNode = SelectedNode->NextAlarm->NextAlarm;
+				*HeadNode = SelectedNode->NextAlarm;
+				SelectedNode->NextAlarm->NextAlarm = SelectedNode;
+				SelectedNode->NextAlarm = TempNode;
+			}
+		} else {
+			if (mode < 0) {
+				ALARM *TailNode = *HeadNode;
+				while (TailNode->NextAlarm != NULL) TailNode = TailNode->NextAlarm;
+				if (SelectedNode != TailNode) {
+					ALARM *TempNode = SelectedNode->NextAlarm;
+					ALARM *PreNode = *HeadNode;
+					while (PreNode != NULL && PreNode->NextAlarm != SelectedNode) PreNode = PreNode->NextAlarm;
+
+					SelectedNode->NextAlarm = TempNode->NextAlarm;
+					TempNode->NextAlarm = SelectedNode;
+					PreNode->NextAlarm = TempNode;
+				}
+			} else if (mode > 0) {
+				if ((*HeadNode)->NextAlarm == SelectedNode) {
+					ALARM *TempNode = SelectedNode->NextAlarm;
+					(*HeadNode)->NextAlarm = TempNode;
+					SelectedNode->NextAlarm = *HeadNode;
+					*HeadNode = SelectedNode;
+				} else {
+					ALARM *dPreNode = *HeadNode;
+					ALARM *TempNode = SelectedNode->NextAlarm;
+					while (dPreNode != NULL && dPreNode->NextAlarm->NextAlarm != SelectedNode) dPreNode = dPreNode->NextAlarm;
+					dPreNode->NextAlarm->NextAlarm = TempNode;
+					SelectedNode->NextAlarm = dPreNode->NextAlarm;
+					dPreNode->NextAlarm = SelectedNode;
+				}
+			}
+		}
+		AlarmFileWriter(*HeadNode);
+	}
+}
+
 // The difference between C's feof() and Pascal's eof().
 // Pascal's function returns true if the next read will fail because of end of file. C's function returns true if the last function failed
 void AlarmFileReader(ALARM **HeadNode, int *uNumOfAlarm) {

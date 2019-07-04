@@ -259,13 +259,25 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			break;
 
 		case 5:
-			if (PrintNodePoint > 0) PrintNodePoint--;
-			InvalidateRect(hWnd, NULL, true);
+			if (HeadNode != NULL) {
+				SelectedNode = HeadNode;
+				while (SelectedNode != NULL && SelectedNode->Selected != true) SelectedNode = SelectedNode->NextAlarm;
+				if (SelectedNode != NULL) {
+					ShiftNode(&HeadNode, SelectedNode, 1);
+					InvalidateRect(hWnd, NULL, true);
+				}
+			}
 			break;
 
 		case 6:
-			if (NumOfAlarm - PrintNodePoint > 10) PrintNodePoint++;
-			InvalidateRect(hWnd, NULL, true);
+			if (HeadNode != NULL) {
+				SelectedNode = HeadNode;
+				while (SelectedNode != NULL && SelectedNode->Selected != true) SelectedNode = SelectedNode->NextAlarm;
+				if (SelectedNode != NULL) {
+					ShiftNode(&HeadNode, SelectedNode, -1);
+					InvalidateRect(hWnd, NULL, true);
+				}
+			}
 			break;
 
 		case 7:

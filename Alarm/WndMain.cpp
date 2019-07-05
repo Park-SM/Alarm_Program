@@ -1,20 +1,23 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define TRAY_NOTIFY WM_APP + 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "AlarmLib.h"
+#include "resource.h"
 #pragma comment(lib, "Winmm.lib")
 
+void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type);
 
-HWND ghWnd = NULL;
 HINSTANCE gInstance;
 WNDCLASS WndClass;
 LPCWSTR lpszClassN = L"Park Alarm";
 uPOINT mainCursor;
 bool ExistWindows = true;
 bool ExistMainTimer = false;
+bool FromTrayIcon = false;
 
 int FocusWnd = 0;
 bool bAddMenu = false;
@@ -70,6 +73,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 			DispatchMessage(&Msg);	
 		}
 	}
+	
 
 	return Msg.wParam;
 }
@@ -85,8 +89,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 			if (Current->OnOff && Current->time.RepeatWeek[CurrentTime.tm_wday] && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
 				Current->OnOff = false;
 				if (!ExistWindows) {	// Wake up window if destroied window.
-					ShowWindow(ghWnd, SW_SHOWNORMAL);
-					hWnd = ghWnd;
+					ShowWindow(hWnd, SW_SHOWNORMAL);
 					ExistWindows = true;
 				}
 				memset(mciString, 0x00, 512);
@@ -108,12 +111,26 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	int x, y;
 	int CheckedType;
+	static NOTIFYICONDATA nid;
+	HMENU hMenu;
+	POINT nPt;
 	
 	switch (iMessage) {
 
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 1000, (TIMERPROC)TimeProc);
 		AlarmFileReader(&HeadNode, &NumOfAlarm);
+		nid.cbSize = sizeof(nid);
+		nid.hWnd = hWnd;
+		nid.uID = 1;
+		nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+		nid.uCallbackMessage = TRAY_NOTIFY;
+		nid.hIcon = LoadIcon(gInstance, MAKEINTRESOURCE(IDI_ICON1));
+		wcsncpy(nid.szTip, L"I am ParkAlarm.", wcslen(L"I am ParkAlarm."));
+
+		Shell_NotifyIconW(NIM_ADD, &nid);
+
+		return 0;
 
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMaxTrackSize.x = 500;
@@ -178,28 +195,70 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		else if (FocusWnd == 2) InvalidateRect(hWnd, &ModifyRect, true);
 		return 0;
 
+
+	case TRAY_NOTIFY:
+		switch (lParam) {
+		
+		case WM_LBUTTONDBLCLK:
+			ShowWindow(hWnd, SW_SHOWNORMAL);
+			break;
+
+		case WM_RBUTTONDOWN:
+			hMenu = LoadMenu(gInstance, MAKEINTRESOURCE(IDR_MENU1));
+			GetCursorPos(&nPt);
+
+			SetForegroundWindow(hWnd);
+			TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RIGHTBUTTON, nPt.x, nPt.y, 0, hWnd, NULL);
+			SetForegroundWindow(hWnd);
+			break;
+		}
+		return 0;
+
+	case WM_COMMAND:
+		switch (wParam) {
+		case ID_40002:
+			MessageBox(hWnd, L"Develop by Park97.sm@gmail.com", L"From. Park_Alarm", MB_OK);
+			break;
+
+		case ID_40001:
+			FromTrayIcon = true;
+			Shell_NotifyIconW(NIM_DELETE, &nid);
+
+			KillTimer(hWnd, 1);
+			DestroyWindow(hWnd);
+			DestroyList(&HeadNode, &NumOfAlarm);
+			PostQuitMessage(0);
+			break;
+		}
+		return 0;
+
+	case WM_QUERYENDSESSION:
+		AlarmFileWriter(HeadNode);
+		return 0;
+
 	case WM_DESTROY:
-		//KillTimer(hWnd, 1);
-		//PostQuitMessage(0);
-		DestroyWindow(hWnd);
+		KillTimer(hWnd, 1);
+		Shell_NotifyIconW(NIM_DELETE, &nid);
 		DestroyList(&HeadNode, &NumOfAlarm);
 		ExistWindows = false;
-		ghWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME | WS_SYSMENU | WS_CAPTION,	//  | WS_SYSMENU | WS_CAPTION
-			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			NULL, (HMENU)NULL, gInstance, NULL);
+		if (!FromTrayIcon) {
+			CreateWindow(lpszClassN, L"", WS_THICKFRAME | WS_SYSMENU | WS_CAPTION,	//  | WS_SYSMENU | WS_CAPTION
+				CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+				NULL, (HMENU)NULL, gInstance, NULL);
+		}
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
 }
 
 void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
-	static bool IsFirstH = true;	// Using for FocusWnd2
-	static bool IsFirstM = true;	// Using for FocusWnd2
-	static WCHAR OldFileName[100];	// Using for FocusWnd2
-	static WCHAR OldFilePath[512];	// Using for FocusWnd2
-	static int OldHourType = 0;
-	static int OldMinuteType = 0;
-	static ALARM *OldSelected = NULL;
+	static bool IsFirstH = true;		// Using for FocusWnd2.
+	static bool IsFirstM = true;		// Using for FocusWnd2.
+	static WCHAR OldFileName[100];		// Using for FocusWnd2.
+	static WCHAR OldFilePath[512];		// Using for FocusWnd2.
+	static int OldHourType = 0;			// Using for FocusWnd1 and 2.
+	static int OldMinuteType = 0;		// Using for FocusWnd1 and 2.
+	static ALARM *OldSelected = NULL;	// Using for FocusWnd0.
 
 	if (FocusWnd == 0) {
 		switch (type) {

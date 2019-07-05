@@ -22,13 +22,20 @@
 #define IDB_BITMAP18                    131
 #define IDB_BITMAP19                    132
 #define IDB_BITMAP20                    135
+#define IDI_ICON1                       146
+#define IDR_MENU1                       147
+#define ID_40001                        40001
+#define ID_40002                        40002
+#define ID_40003                        40003
+#define ID_40004                        40004
+#define ID_INFORMATION                  40005
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         40001
+#define _APS_NEXT_RESOURCE_VALUE        148
+#define _APS_NEXT_COMMAND_VALUE         40006
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

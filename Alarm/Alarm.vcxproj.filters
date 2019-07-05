@@ -99,5 +99,8 @@
     <Image Include="Off_button.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="Tray_Icon.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -140,6 +140,7 @@
     <Image Include="Copy.bmp" />
     <Image Include="Delete.bmp" />
     <Image Include="DownArrow.bmp" />
+    <Image Include="icon2.ico" />
     <Image Include="MainTitle.bmp" />
     <Image Include="ModificationMenu_Modify.bmp" />
     <Image Include="ModificationMenu_Title.bmp" />

@@ -52,7 +52,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.cbWndExtra = 0;
 	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	WndClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
 	WndClass.hInstance = hInstance;
 	WndClass.lpfnWndProc = (WNDPROC)WndProc;
 	WndClass.lpszClassName = lpszClassN;
@@ -60,7 +60,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	hWnd = CreateWindow(lpszClassN, L"", WS_THICKFRAME | WS_SYSMENU | WS_CAPTION,	//  | WS_SYSMENU | WS_CAPTION
+	hWnd = CreateWindow(lpszClassN, L"", WS_SYSMENU | WS_MINIMIZEBOX,	//  | WS_SYSMENU | WS_CAPTION
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
@@ -112,7 +112,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	int x, y;
 	int CheckedType;
 	static NOTIFYICONDATA nid;
-	HMENU hMenu;
+	HMENU hMenu, hPopupMenu;
 	POINT nPt;
 	
 	switch (iMessage) {
@@ -205,10 +205,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 		case WM_RBUTTONDOWN:
 			hMenu = LoadMenu(gInstance, MAKEINTRESOURCE(IDR_MENU1));
+			hPopupMenu = GetSubMenu(hMenu, 0);
 			GetCursorPos(&nPt);
 
 			SetForegroundWindow(hWnd);
-			TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RIGHTBUTTON, nPt.x, nPt.y, 0, hWnd, NULL);
+			TrackPopupMenu(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_RIGHTBUTTON, nPt.x, nPt.y, 0, hWnd, NULL);
 			SetForegroundWindow(hWnd);
 			break;
 		}
@@ -216,8 +217,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 	case WM_COMMAND:
 		switch (wParam) {
+		case ID_40003:
+			MessageBox(hWnd, L"::Help::\n\n#1. 설정한 알람이 저장 안될 때\n 해당 문제의 원인은 C:\\Program Files\\ParkAlarm 폴더 안에 설정한 알람을 저장하는 txt파일이 생성되지 않기 때문에 발생된 것입니다.\n\n>> 해결방안\n 1.) C:\\Program Files 폴더 안에 ParkAlarm폴더가 없는 경우.\n  = 이 경우에는 C:\\Program Files\\ParkAlarm 폴더를 생성해주시면 됩니\n    다.\n\n 2.) C:\\Program Files\\ParkAlarm 폴더에 Users가 수정 권한이 없는 경우.\n  = 이 경우에는 C:\\Program Files\\ParkAlarm 폴더에서 마우스 오른쪽버\n    튼 > 속성(R) > 보안 탭 > \"편집(E)\" 클릭 > \"그룹 또는 사용자 이\n    름(G)\" 안에 \"Users\" 클릭 > \"Users의 사용 권한(P)\" 안에 \"모든 권한\" 클\n    릭 > \"적용\" 클릭 > \"확인\" 클릭 > 프로그램 재시작 하시면 됩니다.\n\n\n\n\n 이 외의 프로그램 오류는\npark97.sm@gmail.com로 메일 보내주시면 빠르게 조치하겠습니다 : )", L"From. Park_Alarm", MB_OK);
+			break;
+
 		case ID_40002:
-			MessageBox(hWnd, L"Develop by Park97.sm@gmail.com", L"From. Park_Alarm", MB_OK);
+			MessageBox(hWnd, L"Version: v1.0\n\nDeveloped day 2019.07.06\nDeveloped by Park97.sm@gmail.com", L"From. Park_Alarm", MB_OK);
 			break;
 
 		case ID_40001:

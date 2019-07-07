@@ -858,10 +858,9 @@ void AppearAddMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME tSelectedTime, L
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);
 	if (*AddMenuFirstMotion) {
-		for (int StayX = 1; StayX <= 35; StayX++) {
-			for (int Frame = StayX; Frame > 0; Frame--)
-				Rectangle(hdc, 0, 50, StayX * 10, 450);
-			Sleep(15);
+		for (int StayX = 1; StayX <= 14; StayX++) {
+			for (int Frame = StayX; Frame > 0; Frame--) Sleep(1);
+			Rectangle(hdc, 0, 50, StayX * 25, 450);
 		}
 		*FocusWnd = 1;
 		*AddMenuFirstMotion = false;
@@ -940,10 +939,9 @@ void AppearModifyMenu(HINSTANCE Instance, HWND hWnd, HDC hdc, TIME *tSelectedTim
 	BorderPen = CreatePen(PS_SOLID, 1, RGB(37, 177, 245));
 	OldPen = (HPEN)SelectObject(hdc, BorderPen);
 	if (*ModifyMenuFistMotion) {
-		for (int StayX = 1; StayX <= 35; StayX++) {
-			for (int Frame = StayX; Frame > 0; Frame--)
-				Rectangle(hdc, 500 - (StayX * 10), 50, 500, 450);
-			Sleep(15);
+		for (int StayX = 1; StayX <= 14; StayX++) {
+			for (int Frame = StayX; Frame > 0; Frame--) Sleep(1);
+			Rectangle(hdc, 500 - (StayX * 25), 50, 500, 450);
 		}
 		*FocusWnd = 2;
 		*ModifyMenuFistMotion = false;

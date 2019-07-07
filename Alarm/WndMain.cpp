@@ -60,7 +60,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	hWnd = CreateWindow(lpszClassN, L"", WS_SYSMENU | WS_MINIMIZEBOX,	//  | WS_SYSMENU | WS_CAPTION
+	hWnd = CreateWindow(lpszClassN, L"", WS_SYSMENU | WS_MINIMIZEBOX,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
@@ -74,7 +74,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		}
 	}
 	
-
 	return Msg.wParam;
 }
 
@@ -88,7 +87,7 @@ void TimeProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 		while (Current != NULL) {
 			if (Current->OnOff && Current->time.RepeatWeek[CurrentTime.tm_wday] && Current->time.Hou == CurrentTime.tm_hour && Current->time.Min == CurrentTime.tm_min) {
 				Current->OnOff = false;
-				if (!ExistWindows) {	// Wake up window if destroied window.
+				if (!ExistWindows) {	// Wake up window if is destroied window.
 					ShowWindow(hWnd, SW_SHOWNORMAL);
 					ExistWindows = true;
 				}
@@ -237,17 +236,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 
-	case WM_QUERYENDSESSION:
-		AlarmFileWriter(HeadNode);
-		return 0;
-
 	case WM_DESTROY:
 		KillTimer(hWnd, 1);
 		Shell_NotifyIconW(NIM_DELETE, &nid);
 		DestroyList(&HeadNode, &NumOfAlarm);
 		ExistWindows = false;
 		if (!FromTrayIcon) {
-			CreateWindow(lpszClassN, L"", WS_THICKFRAME | WS_SYSMENU | WS_CAPTION,	//  | WS_SYSMENU | WS_CAPTION
+			CreateWindow(lpszClassN, L"", WS_SYSMENU | WS_MINIMIZEBOX,
 				CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 				NULL, (HMENU)NULL, gInstance, NULL);
 		}
@@ -288,7 +283,6 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 					InvalidateRect(hWnd, NULL, false);
 				}
 			}
-			//MessageBox(hWnd, L"Click Modify button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		case 3:
@@ -319,7 +313,6 @@ void OnClickListener(HINSTANCE Instance, HWND hWnd, int type) {
 			}
 			SelectedNode = NULL;
 			InvalidateRect(hWnd, NULL, false);
-			//MessageBox(hWnd, L"Click Copy button!!", L"From. Park Alarm", MB_OK);
 			break;
 
 		case 5:

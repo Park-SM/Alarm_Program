@@ -43,7 +43,7 @@ This is an alarm program using WINAPI.
       <td><img width = "147" height = "79" src = "https://user-images.githubusercontent.com/47319426/62797623-1a378980-bb17-11e9-9b56-ccdab43c85ca.JPG"></td>
     </tr>
     <tr>
-      <td>Add tray icon</td>
+      <td align = "center">Add tray icon</td>
     </tr>
   </table>
 </div>

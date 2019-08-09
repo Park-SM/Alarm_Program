@@ -36,5 +36,14 @@ This is an alarm program using WINAPI.
       <td></td>
       <td align = "center">Alarm popup and alarm sound</td>
     </tr>
+  </table><br>
+  
+  <table border = 0>
+    <tr>
+      <td><img width = "147" height = "79" src = "https://user-images.githubusercontent.com/47319426/62797623-1a378980-bb17-11e9-9b56-ccdab43c85ca.JPG"></td>
+    </tr>
+    <tr>
+      <td>Add tray icon</td>
+    </tr>
   </table>
 </div>
